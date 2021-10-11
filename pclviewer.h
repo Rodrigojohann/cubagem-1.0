@@ -20,7 +20,7 @@ class PCLViewer
 {
   public:
 
-    void MainFrame();
+    void Run();
     void ConnectDevice();
     bool firstCall;
 
