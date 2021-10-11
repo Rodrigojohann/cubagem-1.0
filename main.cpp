@@ -1,9 +1,10 @@
 #include "pclviewer.h"
 
-int main (int argc)
+int main ()
 {
-  PCLViewer w;
-  w.Run();
+  char* ip = "192.168.140.2";
 
-//  return a.exec ();
+  PCLViewer w;
+  w.Run(ip);
+
 }

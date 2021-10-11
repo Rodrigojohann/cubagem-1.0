@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void PCLViewer::Run(){
+void PCLViewer::Run(char* ipaddr){
   ////////
     Controller c;
     Sensor s;
@@ -22,7 +22,7 @@ void PCLViewer::Run(){
         cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
         coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-        cloudnew = s.CamStream(IP, PORT);
+        cloudnew = s.CamStream(ipaddr, PORT);
         coloredinput->points.resize(cloudnew->points.size());
 
         if (cloudnew->points.size() > 100)
@@ -121,7 +121,7 @@ void PCLViewer::Run(){
     Vol5 = to_string(mean5/10).substr(0,5)+" m³";
     TotalStr = to_string(volumemean/10).substr(0,5)+" m³";
 
-    cout << "Volume: " TotalStr<<;
+    cout << "Volume: " << TotalStr;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::ConnectDevice()
