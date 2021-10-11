@@ -94,28 +94,44 @@ void PCLViewer::Run(char* ipaddr){
                 hullarea = c.SurfaceArea(segmented_cloud);
                 std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                objvolume = hullarea*dimensionZ/100;
+                //objvolume = hullarea*dimensionZ/100;
+                objvolume = dimensionX*dimensionY*dimensionZ;
                 totalvolume += objvolume;
 
                 if (number == 0)
                 {
                     mean1 += objvolume;
+                    x1 += dimensionX;
+                    y1 += dimensionY;
+                    z1 += dimensionZ;
                 }
                 else if (number == 1)
                 {
                     mean2 += objvolume;
+                    x2 += dimensionX;
+                    y2 += dimensionY;
+                    z2 += dimensionZ;
                 }
                 else if (number == 2)
                 {
                     mean3 += objvolume;
+                    x3 += dimensionX;
+                    y3 += dimensionY;
+                    z3 += dimensionZ;
                 }
                 else if (number == 3)
                 {
                     mean4 += objvolume;
+                    x4 += dimensionX;
+                    y4 += dimensionY;
+                    z4 += dimensionZ;
                 }
                 else if (number == 4)
                 {
                     mean5 += objvolume;
+                    x5 += dimensionX;
+                    y5 += dimensionY;
+                    z5 += dimensionZ;
                 }
             }
         }
@@ -128,6 +144,24 @@ void PCLViewer::Run(char* ipaddr){
     mean4 = mean4/10;
     mean5 = mean5/10;
     volumemean = volumemean/10;
+
+    x1 = x1/10;
+    x2 = x2/10;
+    x3 = x3/10;
+    x4 = x4/10;
+    x5 = x5/10;
+
+    y1 = y1/10;
+    y2 = y2/10;
+    y3 = y3/10;
+    y4 = y4/10;
+    y5 = y5/10;
+
+    z1 = z1/10;
+    z2 = z2/10;
+    z3 = z3/10;
+    z4 = z4/10;
+    z5 = z5/10;
 
     cout << "Volume: " << volumemean;
 }
