@@ -17,6 +17,11 @@ void PCLViewer::Run(char* ipaddr){
     mean4 = 0.0;
     mean5 = 0.0;
 
+    x1 = x2 = x3 = x4 = x5 = 0.0;
+    y1 = y2 = y3 = y4 = y5 = 0.0;
+    z1 = z2 = z3 = z4 = z5 = 0.0;
+
+
     if (s.TestConnection(ipaddr, PORT) == true)
     {
         cout << "\n True \n\n";
@@ -91,8 +96,6 @@ void PCLViewer::Run(char* ipaddr){
 
                 objvolume = hullarea*dimensionZ/100;
                 totalvolume += objvolume;
-
-                VolStr = to_string(objvolume).substr(0,5)+" m³";
 
                 if (number == 0)
                 {

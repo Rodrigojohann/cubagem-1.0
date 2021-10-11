@@ -41,8 +41,9 @@ class PCLViewer
     double                                  objvolume, totalvolume;
     double                                  volumemean;
     double                                  mean1, mean2, mean3, mean4, mean5;
-    string                                  Vol1, Vol2, Vol3, Vol4, Vol5;
-    string                                  VolStr, TotalStr;
+    double                                  x1, x2, x3, x4, x5;
+    double                                  y1, y2, y3, y4, y5;
+    double                                  z1, z2, z3, z4, z5;
     int                                     limitcluster;
     int                                     clusternumber;
     CloudVector                             camera_cloud;
