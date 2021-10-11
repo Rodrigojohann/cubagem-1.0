@@ -17,7 +17,7 @@ void PCLViewer::Run(char* ipaddr){
     mean4 = 0.0;
     mean5 = 0.0;
 
-    if (s.TestConnection(ipaddr, PORT) == True)
+    if (s.TestConnection(ipaddr, PORT) == true)
     {
         cout << "\n True \n\n";
     }
