@@ -17,6 +17,11 @@ void PCLViewer::Run(char* ipaddr){
     mean4 = 0.0;
     mean5 = 0.0;
 
+    if (s.TestConnection(ipaddr, PORT) == True)
+    {
+        cout << "\n True \n\n";
+    }
+
     for (size_t counter = 0; counter < 10; ++counter)
     {
         cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
