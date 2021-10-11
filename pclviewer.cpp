@@ -119,14 +119,14 @@ void PCLViewer::Run(char* ipaddr){
         volumemean += totalvolume;
     }
 
-    Vol1 = to_string(mean1/10).substr(0,5)+" m³";
-    Vol2 = to_string(mean2/10).substr(0,5)+" m³";
-    Vol3 = to_string(mean3/10).substr(0,5)+" m³";
-    Vol4 = to_string(mean4/10).substr(0,5)+" m³";
-    Vol5 = to_string(mean5/10).substr(0,5)+" m³";
-    TotalStr = to_string(volumemean/10).substr(0,5)+" m³";
+    mean1 = mean1/10;
+    mean2 = mean2/10;
+    mean3 = mean3/10;
+    mean4 = mean4/10;
+    mean5 = mean5/10;
+    volumemean = volumemean/10;
 
-    cout << "Volume: " << TotalStr;
+    cout << "Volume: " << volumemean;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::ConnectDevice()
