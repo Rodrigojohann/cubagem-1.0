@@ -152,9 +152,9 @@ std::tuple<double, double, double> Controller::CalculateDimensions(PointCloudT::
 
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
-    dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
-    dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
-    dimensionZ = (CAMHEIGHT - min_z)*100;
+    dimensionX = (max_point_OBB.x - min_point_OBB.x);
+    dimensionY = (max_point_OBB.y - min_point_OBB.y);
+    dimensionZ = (CAMHEIGHT - min_z);
 
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
