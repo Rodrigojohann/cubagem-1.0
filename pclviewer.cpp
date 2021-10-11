@@ -7,6 +7,16 @@ void PCLViewer::Run(){
     Controller c;
     Sensor s;
 
+    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+    volumemean = 0.0;
+    mean1 = 0.0;
+    mean2 = 0.0;
+    mean3 = 0.0;
+    mean4 = 0.0;
+    mean5 = 0.0;
+
     for (size_t counter = 0; counter < 10; ++counter)
     {
         cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
@@ -111,29 +121,11 @@ void PCLViewer::Run(){
     Vol5 = to_string(mean5/10).substr(0,5)+" m³";
     TotalStr = to_string(volumemean/10).substr(0,5)+" m³";
 
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::Clean()
-{
-    viewer_->removeAllPointClouds();
-
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-    volumemean = 0.0;
-    mean1 = 0.0;
-    mean2 = 0.0;
-    mean3 = 0.0;
-    mean4 = 0.0;
-    mean5 = 0.0;
-
-    emit value(true);
+    cout << "test";
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void PCLViewer::ConnectDevice()
 {
     cout << "test";
-
-
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

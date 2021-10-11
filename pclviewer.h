@@ -21,7 +21,6 @@ class PCLViewer
   public:
 
     void MainFrame();
-    void Clean();
     void ConnectDevice();
     bool firstCall;
 

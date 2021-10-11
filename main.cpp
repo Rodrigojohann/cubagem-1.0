@@ -1,10 +1,9 @@
 #include "pclviewer.h"
 
-int
-main (int argc)
+int main (int argc)
 {
   PCLViewer w;
-  w.show ();
+  w.Run();
 
-  return a.exec ();
+//  return a.exec ();
 }
