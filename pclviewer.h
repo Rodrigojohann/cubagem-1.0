@@ -16,32 +16,17 @@
 using namespace std;
 typedef std::vector<PointXYZ> CloudVector;
 
-namespace Ui
+class PCLViewer
 {
-  class PCLViewer;
-}
-
-class PCLViewer : public QMainWindow
-{
-  Q_OBJECT
-
   public:
-
-  explicit
-    PCLViewer (QWidget *parent = 0);
-
-    ~PCLViewer ();
-
-  public Q_SLOTS:
 
     void MainFrame();
     void Clean();
     void ConnectDevice();
+    bool firstCall;
 
   protected:
 
-    boost::shared_ptr<boost::thread> visualizer_thread_;
-    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr     inputcloud;
     pcl::PointCloud<pcl::PointXYZ>::Ptr     cloudnew;
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr coloredinput;
@@ -63,16 +48,4 @@ class PCLViewer : public QMainWindow
     int                                     clusternumber;
     CloudVector                             camera_cloud;
     double                                  hullarea;
-
-  private:
-    QTimer *tmrTimer;
-
-    /** @brief ui pointer */
-    Ui::PCLViewer *ui;
-
-  public:
-    bool firstCall;
-
-  signals:
-    void value(bool valuesignal);
 };

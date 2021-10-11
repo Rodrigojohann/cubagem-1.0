@@ -1,12 +1,8 @@
 #include "pclviewer.h"
-#include <QApplication>
-#include <QMainWindow>
 
 int
-main (int argc,
-      char *argv[])
+main (int argc)
 {
-  QApplication a (argc, argv);
   PCLViewer w;
   w.show ();
 
