@@ -20,7 +20,7 @@ class PCLViewer
 {
   public:
 
-    void Run();
+    void Run(char* ipaddr);
     void ConnectDevice();
     bool firstCall;
 
