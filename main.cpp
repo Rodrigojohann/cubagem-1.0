@@ -5,6 +5,9 @@ using namespace boost;
 
 int main ()
 {
+
+    char* ipaddr = "192.168.140.2";
+
     // Step 1. Here we assume that the server application has
     //already obtained the protocol port number.
     unsigned short port_num = 3333;
