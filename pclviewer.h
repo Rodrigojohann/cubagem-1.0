@@ -21,8 +21,6 @@ class PCLViewer
   public:
 
     void Run(char* ipaddr);
-    void ConnectDevice();
-    bool firstCall;
 
   protected:
 
