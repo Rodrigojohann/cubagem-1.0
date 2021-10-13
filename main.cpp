@@ -1,4 +1,6 @@
 #include "pclviewer.h"
+#include <boost/asio.hpp>
+
 
 int main ()
 {
@@ -8,3 +10,4 @@ int main ()
   w.Run(ip);
 
 }
+
