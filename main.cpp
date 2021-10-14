@@ -16,7 +16,7 @@ int main ()
     {
       boost::asio::io_service io_service;
       boost::system::error_code ec;
-      boost::asio::ip::address ip_address = boost::asio::ip::address::from_string("127.0.0.1", ec);
+      boost::asio::ip::address ip_address = boost::asio::ip::address::from_string("0.0.0.0", ec);
 
       tcp::acceptor acceptor(io_service, tcp::endpoint(ip_address, 13));
 
