@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
       std::vector<std::string> buf;
       boost::system::error_code error;
 
-      size_t len = socket.read_some(boost::asio::buffer(buf->points()), error);
+      size_t len = socket.read_some(boost::asio::buffer(&buf), error);
 
       if (error == boost::asio::error::eof)
         break; // Connection closed cleanly by peer.
