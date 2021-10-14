@@ -1,7 +1,6 @@
 #include "pclviewer.h"
 #include <boost/asio.hpp>
 #include <boost/serialization/vector.hpp>
-#include "stock.hpp"
 
 using namespace boost;
 using boost::asio::ip::tcp;
