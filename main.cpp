@@ -27,8 +27,10 @@ int main ()
 
 //        std::string message = make_daytime_string();
 
+        std::vector<std::string> data = w.Run(ip);
+
         boost::system::error_code ignored_error;
-        boost::asio::write(socket, boost::asio::buffer(w.Run(ip)), ignored_error);
+        boost::asio::write(socket, boost::asio::buffer(&data), ignored_error);
       }
     }
     catch (std::exception& e)
