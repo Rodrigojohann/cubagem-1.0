@@ -12,6 +12,7 @@
 #include <thread>
 #define IP (char*)"192.168.140.2"
 #define PORT 2114
+#include <sstream>
 
 using namespace std;
 typedef std::vector<PointXYZ> CloudVector;
