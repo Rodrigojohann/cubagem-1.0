@@ -167,7 +167,7 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
     outputarray.push_back({x2,y2,z2});
     outputarray.push_back({x3,y3,z3});
     outputarray.push_back({x4,y4,z4});
-    outputarray.push_back({x5,y5,z5^});
+    outputarray.push_back({x5,y5,z5});
 
     return outputarray;
 
