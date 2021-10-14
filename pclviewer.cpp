@@ -177,13 +177,13 @@ string PCLViewer::Run(char* ipaddr){
         Z4 = to_string(z4/10);
         Z5 = to_string(z5/10);
 
-        outputarray.push_back("[");
-        outputarray.push_back("{(\"Caixa\": 1, Dimensoes: {\"X\": \""+X1+"\", \"Y\": \""+Y1+"\", \"Z\": \""+Z1+"\"}}");
-        outputarray.push_back("{(\"Caixa\": 2, Dimensoes: {\"X\": \""+X2+"\", \"Y\": \""+Y2+"\", \"Z\": \""+Z2+"\"}}");
-        outputarray.push_back("{(\"Caixa\": 3, Dimensoes: {\"X\": \""+X3+"\", \"Y\": \""+Y3+"\", \"Z\": \""+Z3+"\"}}");
-        outputarray.push_back("{(\"Caixa\": 4, Dimensoes: {\"X\": \""+X4+"\", \"Y\": \""+Y4+"\", \"Z\": \""+Z4+"\"}}");
-        outputarray.push_back("{(\"Caixa\": 5, Dimensoes: {\"X\": \""+X5+"\", \"Y\": \""+Y5+"\", \"Z\": \""+Z5+"\"}}");
-        outputarray.push_back("]");
+        outputarray.push_back("{");
+        outputarray.push_back("\"1\": {\"X\": \""+X1+"\", \"Y\": \""+Y1+"\", \"Z\": \""+Z1+"\"},");
+        outputarray.push_back("\"2\": {\"X\": \""+X2+"\", \"Y\": \""+Y2+"\", \"Z\": \""+Z2+"\"},");
+        outputarray.push_back("\"3\": {\"X\": \""+X3+"\", \"Y\": \""+Y3+"\", \"Z\": \""+Z3+"\"},");
+        outputarray.push_back("\"4\": {\"X\": \""+X4+"\", \"Y\": \""+Y4+"\", \"Z\": \""+Z4+"\"},");
+        outputarray.push_back("\"5\": {\"X\": \""+X5+"\", \"Y\": \""+Y5+"\", \"Z\": \""+Z5+"\"}");
+        outputarray.push_back("}");
 //        outputarray.push_back({x2,y2,z2});
 //        outputarray.push_back({x3,y3,z3});
 //        outputarray.push_back({x4,y4,z4});
@@ -193,8 +193,8 @@ string PCLViewer::Run(char* ipaddr){
 
         for(size_t i = 0; i < outputarray.size(); ++i)
         {
-          if(i != 0)
-            ss << ",";
+//          if(i != 0)
+//            ss << ",";
           ss << outputarray[i];
         }
 
