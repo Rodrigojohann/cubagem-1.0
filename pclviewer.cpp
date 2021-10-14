@@ -145,25 +145,29 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
     mean5 = mean5/10;
     volumemean = volumemean/10;
 
-//    x1 = x1/10;
-//    x2 = x2/10;
-//    x3 = x3/10;
-//    x4 = x4/10;
-//    x5 = x5/10;
+    x1 = x1/10;
+    x2 = x2/10;
+    x3 = x3/10;
+    x4 = x4/10;
+    x5 = x5/10;
 
-//    y1 = y1/10;
-//    y2 = y2/10;
-//    y3 = y3/10;
-//    y4 = y4/10;
-//    y5 = y5/10;
+    y1 = y1/10;
+    y2 = y2/10;
+    y3 = y3/10;
+    y4 = y4/10;
+    y5 = y5/10;
 
-//    z1 = z1/10;
-//    z2 = z2/10;
-//    z3 = z3/10;
-//    z4 = z4/10;
-//    z5 = z5/10;
+    z1 = z1/10;
+    z2 = z2/10;
+    z3 = z3/10;
+    z4 = z4/10;
+    z5 = z5/10;
 
-    outputarray.push_back({x1,y1,z1});
+    outputarray.push_back({to_string(x1),to_string(y1),to_string(z1)});
+    outputarray.push_back({to_string(x2),to_string(y2),to_string(z2)});
+    outputarray.push_back({to_string(x3),to_string(y3),to_string(z3)});
+    outputarray.push_back({to_string(x4),to_string(y4),to_string(z4)});
+    outputarray.push_back({to_string(x5),to_string(y5),to_string(z5)});
 
     return outputarray;
 
