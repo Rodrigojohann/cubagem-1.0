@@ -46,5 +46,5 @@ class PCLViewer
     int                                     clusternumber;
     CloudVector                             camera_cloud;
     double                                  hullarea;
-    double                                  outputarray[5][3];
+    string                                  outputarray[5][3];
 };
