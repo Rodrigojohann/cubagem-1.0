@@ -28,7 +28,7 @@ int main ()
 //        std::string message = make_daytime_string();
 
         boost::system::error_code ignored_error;
-        boost::asio::write(socket, boost::asio::buffer(w.Run(ip)), ignored_error);
+        boost::asio::write(socket, boost::asio::buffer(w.Run(ip)->points()), ignored_error);
       }
     }
     catch (std::exception& e)

@@ -9,6 +9,7 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
 
     coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
     coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    outputarray.clear();
 
     volumemean = 0.0;
     mean1 = 0.0;
@@ -27,153 +28,151 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
         outputarray.push_back("connection failed");
         return outputarray;
     }
-    else {
-
-
-
-    for (size_t counter = 0; counter < 10; ++counter)
+    else
     {
-        cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
-        coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-        cloudnew = s.CamStream(ipaddr, PORT);
-        coloredinput->points.resize(cloudnew->points.size());
-
-        if (cloudnew->points.size() > 100)
+        for (size_t counter = 0; counter < 10; ++counter)
         {
-            for (size_t i = 0; i < coloredinput->points.size(); i++)
+            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+            cloudnew = s.CamStream(ipaddr, PORT);
+            coloredinput->points.resize(cloudnew->points.size());
+
+            if (cloudnew->points.size() > 100)
             {
-                coloredinput->points[i].x = (*cloudnew)[i].x;
-                coloredinput->points[i].y = (*cloudnew)[i].y;
-                coloredinput->points[i].z = (*cloudnew)[i].z;
-                coloredinput->points[i].r = 255;
-                coloredinput->points[i].g = 255;
-                coloredinput->points[i].b = 255;
-                coloredinput->points[i].a = 200;
-            }
+                for (size_t i = 0; i < coloredinput->points.size(); i++)
+                {
+                    coloredinput->points[i].x = (*cloudnew)[i].x;
+                    coloredinput->points[i].y = (*cloudnew)[i].y;
+                    coloredinput->points[i].z = (*cloudnew)[i].z;
+                    coloredinput->points[i].r = 255;
+                    coloredinput->points[i].g = 255;
+                    coloredinput->points[i].b = 255;
+                    coloredinput->points[i].a = 200;
+                }
 
-            filteredcloud = c.FilterCloud(cloudnew);
-            std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+                filteredcloud = c.FilterCloud(cloudnew);
+                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-            notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-            clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
+                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+                clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
-            if (clusters.size() > 5)
-            {
-                limitcluster = 5;
-            }
-            else
-            {
-                limitcluster = clusters.size();
-            }
+                if (clusters.size() > 5)
+                {
+                    limitcluster = 5;
+                }
+                else
+                {
+                    limitcluster = clusters.size();
+                }
 
-            totalvolume = 0;
-            objvolume = 0;
+                totalvolume = 0;
+                objvolume = 0;
 
-            coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-            for (int number=0; number<limitcluster; ++number)
-            {
-                segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-                coloredcloud->points.resize(clusters[number].indices.size());
-                segmented_cloud->points.resize(clusters[number].indices.size());
 
-                for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                for (int number=0; number<limitcluster; ++number)
                 {
-                    segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                    segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                    segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
+                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                    coloredcloud->points.resize(clusters[number].indices.size());
+                    segmented_cloud->points.resize(clusters[number].indices.size());
 
-                    coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                    coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                    coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                    {
+                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                    coloredcloud->points[i].r = cloudcolor[number][0];
-                    coloredcloud->points[i].g = cloudcolor[number][1];
-                    coloredcloud->points[i].b = cloudcolor[number][2];
-                    coloredcloud->points[i].a = 255;
-                }
+                        coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                        coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                        coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                hullarea = c.SurfaceArea(segmented_cloud);
-                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
+                        coloredcloud->points[i].r = cloudcolor[number][0];
+                        coloredcloud->points[i].g = cloudcolor[number][1];
+                        coloredcloud->points[i].b = cloudcolor[number][2];
+                        coloredcloud->points[i].a = 255;
+                    }
 
-                //objvolume = hullarea*dimensionZ/100;
-                objvolume = dimensionX*dimensionY*dimensionZ;
-                totalvolume += objvolume;
+                    hullarea = c.SurfaceArea(segmented_cloud);
+                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                if (number == 0)
-                {
-                    mean1 += objvolume;
-                    x1 += dimensionX;
-                    y1 += dimensionY;
-                    z1 += dimensionZ;
-                }
-                else if (number == 1)
-                {
-                    mean2 += objvolume;
-                    x2 += dimensionX;
-                    y2 += dimensionY;
-                    z2 += dimensionZ;
-                }
-                else if (number == 2)
-                {
-                    mean3 += objvolume;
-                    x3 += dimensionX;
-                    y3 += dimensionY;
-                    z3 += dimensionZ;
-                }
-                else if (number == 3)
-                {
-                    mean4 += objvolume;
-                    x4 += dimensionX;
-                    y4 += dimensionY;
-                    z4 += dimensionZ;
-                }
-                else if (number == 4)
-                {
-                    mean5 += objvolume;
-                    x5 += dimensionX;
-                    y5 += dimensionY;
-                    z5 += dimensionZ;
+                    //objvolume = hullarea*dimensionZ/100;
+                    objvolume = dimensionX*dimensionY*dimensionZ;
+                    totalvolume += objvolume;
+
+                    if (number == 0)
+                    {
+                        mean1 += objvolume;
+                        x1 += dimensionX;
+                        y1 += dimensionY;
+                        z1 += dimensionZ;
+                    }
+                    else if (number == 1)
+                    {
+                        mean2 += objvolume;
+                        x2 += dimensionX;
+                        y2 += dimensionY;
+                        z2 += dimensionZ;
+                    }
+                    else if (number == 2)
+                    {
+                        mean3 += objvolume;
+                        x3 += dimensionX;
+                        y3 += dimensionY;
+                        z3 += dimensionZ;
+                    }
+                    else if (number == 3)
+                    {
+                        mean4 += objvolume;
+                        x4 += dimensionX;
+                        y4 += dimensionY;
+                        z4 += dimensionZ;
+                    }
+                    else if (number == 4)
+                    {
+                        mean5 += objvolume;
+                        x5 += dimensionX;
+                        y5 += dimensionY;
+                        z5 += dimensionZ;
+                    }
                 }
             }
+            volumemean += totalvolume;
         }
-        volumemean += totalvolume;
+
+        mean1 = mean1/10;
+        mean2 = mean2/10;
+        mean3 = mean3/10;
+        mean4 = mean4/10;
+        mean5 = mean5/10;
+        volumemean = volumemean/10;
+
+        x1 = x1/10;
+        x2 = x2/10;
+        x3 = x3/10;
+        x4 = x4/10;
+        x5 = x5/10;
+
+        y1 = y1/10;
+        y2 = y2/10;
+        y3 = y3/10;
+        y4 = y4/10;
+        y5 = y5/10;
+
+        z1 = z1/10;
+        z2 = z2/10;
+        z3 = z3/10;
+        z4 = z4/10;
+        z5 = z5/10;
+
+        outputarray.push_back({x1,y1,z1});
+        outputarray.push_back({x2,y2,z2});
+        outputarray.push_back({x3,y3,z3});
+        outputarray.push_back({x4,y4,z4});
+        outputarray.push_back({x5,y5,z5});
+
+        return outputarray;
     }
-
-    mean1 = mean1/10;
-    mean2 = mean2/10;
-    mean3 = mean3/10;
-    mean4 = mean4/10;
-    mean5 = mean5/10;
-    volumemean = volumemean/10;
-
-    x1 = x1/10;
-    x2 = x2/10;
-    x3 = x3/10;
-    x4 = x4/10;
-    x5 = x5/10;
-
-    y1 = y1/10;
-    y2 = y2/10;
-    y3 = y3/10;
-    y4 = y4/10;
-    y5 = y5/10;
-
-    z1 = z1/10;
-    z2 = z2/10;
-    z3 = z3/10;
-    z4 = z4/10;
-    z5 = z5/10;
-
-    outputarray.push_back({x1,y1,z1});
-    outputarray.push_back({x2,y2,z2});
-    outputarray.push_back({x3,y3,z3});
-    outputarray.push_back({x4,y4,z4});
-    outputarray.push_back({x5,y5,z5});
-
-    return outputarray;
-}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
