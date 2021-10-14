@@ -22,10 +22,14 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
     z1 = z2 = z3 = z4 = z5 = 0.0;
 
 
-    if (s.TestConnection(ipaddr, PORT) == true)
+    if (s.TestConnection(ipaddr, PORT) == false)
     {
-        cout << "\n True \n\n";
+        outputarray.push_back("connection failed");
+        return outputarray;
     }
+    else {
+
+
 
     for (size_t counter = 0; counter < 10; ++counter)
     {
@@ -170,6 +174,6 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
     outputarray.push_back({x5,y5,z5});
 
     return outputarray;
-
+}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
