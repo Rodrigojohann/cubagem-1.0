@@ -11,7 +11,6 @@ int main ()
 /////
     char* ip = "192.168.140.2";
     PCLViewer w;
-    double outputarray[5][3];
 /////
     try
     {
@@ -28,10 +27,10 @@ int main ()
 
 //        std::string message = make_daytime_string();
 
-        std::vector<std::string> data = w.Run(ip);
+        std::string data = w.Run(ip);
 
         boost::system::error_code ignored_error;
-        boost::asio::write(socket, boost::asio::buffer((char*)&data.front(),5), ignored_error);
+        boost::asio::write(socket, boost::asio::buffer(data), ignored_error);
       }
     }
     catch (std::exception& e)

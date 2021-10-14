@@ -2,7 +2,7 @@
 
 using namespace std;
 
-std::vector<std::string> PCLViewer::Run(char* ipaddr){
+string PCLViewer::Run(char* ipaddr){
   ////////
     Controller c;
     Sensor s;
@@ -172,7 +172,14 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
         outputarray.push_back({x4,y4,z4});
         outputarray.push_back({x5,y5,z5});
 
-        return outputarray;
+        for(size_t i = 0; i < outputarray.size(); ++i)
+        {
+          if(i != 0)
+            outputstring << ",";
+          outputstring << outputarray[i];
+        }
+
+        return outputstring;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
