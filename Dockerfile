@@ -7,5 +7,5 @@ COPY . /home/cubagem-1.0
 WORKDIR /home/cubagem-1.0
 #RUN cmake CMakeLists.txt
 #RUN make  
-CMD ./cubagem-gui
+#CMD ./cubagem-gui
 

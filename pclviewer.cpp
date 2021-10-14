@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void PCLViewer::Run(char* ipaddr){
+double PCLViewer::Run(char* ipaddr){
   ////////
     Controller c;
     Sensor s;
@@ -145,24 +145,43 @@ void PCLViewer::Run(char* ipaddr){
     mean5 = mean5/10;
     volumemean = volumemean/10;
 
-    x1 = x1/10;
-    x2 = x2/10;
-    x3 = x3/10;
-    x4 = x4/10;
-    x5 = x5/10;
+//    x1 = x1/10;
+//    x2 = x2/10;
+//    x3 = x3/10;
+//    x4 = x4/10;
+//    x5 = x5/10;
 
-    y1 = y1/10;
-    y2 = y2/10;
-    y3 = y3/10;
-    y4 = y4/10;
-    y5 = y5/10;
+//    y1 = y1/10;
+//    y2 = y2/10;
+//    y3 = y3/10;
+//    y4 = y4/10;
+//    y5 = y5/10;
 
-    z1 = z1/10;
-    z2 = z2/10;
-    z3 = z3/10;
-    z4 = z4/10;
-    z5 = z5/10;
+//    z1 = z1/10;
+//    z2 = z2/10;
+//    z3 = z3/10;
+//    z4 = z4/10;
+//    z5 = z5/10;
 
-    cout << "Volume: " << volumemean;
+    outputarray[0][0] = x1/10;
+    outputarray[0][1] = x2/10;
+    outputarray[0][2] = x3/10;
+    outputarray[0][3] = x4/10;
+    outputarray[0][4] = x5/10;
+
+    outputarray[1][0] = y1/10;
+    outputarray[1][1] = y2/10;
+    outputarray[1][2] = y3/10;
+    outputarray[1][3] = y4/10;
+    outputarray[1][4] = y5/10;
+
+    outputarray[2][0] = z1/10;
+    outputarray[2][1] = z2/10;
+    outputarray[2][2] = z3/10;
+    outputarray[2][3] = z4/10;
+    outputarray[2][4] = z5/10;
+
+    return outputarray;
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

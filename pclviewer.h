@@ -20,7 +20,7 @@ class PCLViewer
 {
   public:
 
-    void Run(char* ipaddr);
+    double Run(char* ipaddr);
 
   protected:
 
@@ -46,4 +46,5 @@ class PCLViewer
     int                                     clusternumber;
     CloudVector                             camera_cloud;
     double                                  hullarea;
+    double                                  outputarray[5][3];
 };
