@@ -20,7 +20,7 @@ class PCLViewer
 {
   public:
 
-    double Run(char* ipaddr);
+    string Run(char* ipaddr);
 
   protected:
 
