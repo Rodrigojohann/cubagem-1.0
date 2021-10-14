@@ -163,11 +163,11 @@ std::vector<std::string> PCLViewer::Run(char* ipaddr){
     z4 = z4/10;
     z5 = z5/10;
 
-    outputarray.push_back({to_string(x1),to_string(y1),to_string(z1)});
-    outputarray.push_back({to_string(x2),to_string(y2),to_string(z2)});
-    outputarray.push_back({to_string(x3),to_string(y3),to_string(z3)});
-    outputarray.push_back({to_string(x4),to_string(y4),to_string(z4)});
-    outputarray.push_back({to_string(x5),to_string(y5),to_string(z5)});
+    outputarray.push_back({x1,y1,z1});
+    outputarray.push_back({x2,y2,z2});
+    outputarray.push_back({x3,y3,z3});
+    outputarray.push_back({x4,y4,z4});
+    outputarray.push_back({x5,y5,z5^});
 
     return outputarray;
 
