@@ -31,7 +31,7 @@ int main ()
         std::vector<std::string> data = w.Run(ip);
 
         boost::system::error_code ignored_error;
-        boost::asio::write(socket, boost::asio::buffer((char*)&data.front()), ignored_error);
+        boost::asio::write(socket, boost::asio::buffer((char*)&data.front(),5), ignored_error);
       }
     }
     catch (std::exception& e)
