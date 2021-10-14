@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(cubagem-gui)
+project(client)
 
 # init_qt: Let's do the CMake job for us
 set(CMAKE_AUTOMOC ON) # For meta object compiler
