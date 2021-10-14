@@ -20,7 +20,7 @@ class PCLViewer
 {
   public:
 
-    string Run(char* ipaddr);
+    std::vector<std::string> Run(char* ipaddr);
 
   protected:
 
@@ -46,5 +46,5 @@ class PCLViewer
     int                                     clusternumber;
     CloudVector                             camera_cloud;
     double                                  hullarea;
-    string                                  outputarray[5][3];
+    std::vector<std::string>                outputarray[5][3];
 };
