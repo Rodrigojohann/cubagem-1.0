@@ -43,6 +43,11 @@ class PCLViewer
     double                                  x1, x2, x3, x4, x5;
     double                                  y1, y2, y3, y4, y5;
     double                                  z1, z2, z3, z4, z5;
+
+    string                                  X1, X2, X3, X4, X5;
+    string                                  Y1, Y2, Y3, Y4, Y5;
+    string                                  Z1, Z2, Z3, Z4, Z5;
+
     int                                     limitcluster;
     int                                     clusternumber;
     CloudVector                             camera_cloud;
