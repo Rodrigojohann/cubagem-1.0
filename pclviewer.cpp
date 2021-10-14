@@ -26,7 +26,15 @@ string PCLViewer::Run(char* ipaddr){
     if (s.TestConnection(ipaddr, PORT) == false)
     {
         outputarray.push_back("connection failed");
-        return outputarray;
+        for(size_t i = 0; i < outputarray.size(); ++i)
+        {
+          if(i != 0)
+            ss << ",";
+          ss << outputarray[i];
+        }
+
+        outputstring = ss.str();
+        return outputstring;
     }
     else
     {
