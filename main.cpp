@@ -6,10 +6,10 @@ using namespace boost;
 using boost::asio::ip::tcp;
 
 
-int main ()
+int main (int argc, char *argv[])
 {
 /////
-    char* ip = "192.168.140.2";
+    char* ip = to_string(argv);
     PCLViewer w;
 /////
     try
