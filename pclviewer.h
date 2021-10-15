@@ -1,8 +1,4 @@
 #pragma once
-#include <QMainWindow>
-#include <QFileDialog>
-#include <QColor>
-#include <QTimer>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <vtkRenderWindow.h>
 #include <sensor.h>
