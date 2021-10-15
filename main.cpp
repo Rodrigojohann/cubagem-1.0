@@ -9,7 +9,7 @@ using boost::asio::ip::tcp;
 int main (int argc, char *argv[])
 {
 /////
-    char* ip = to_string(argv);
+    char* ip = argv[1];
     PCLViewer w;
 /////
     try
@@ -25,8 +25,6 @@ int main (int argc, char *argv[])
         tcp::socket socket(io_service);
         acceptor.accept(socket);
 
-//        std::string message = make_daytime_string();
-
         std::string data = w.Run(ip);
 
         boost::system::error_code ignored_error;
@@ -39,11 +37,6 @@ int main (int argc, char *argv[])
     }
 
     return 0;
-
-
-
-//  w.Run(ip);
-
 }
 
 
