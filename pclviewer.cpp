@@ -120,7 +120,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x1 += dimensionX;
                         y1 += dimensionY;
                         z1 += dimensionZ;
-                        pcl::copyPointCloud(segmented_cloud, outputcloud1);
+                        pcl::copyPointCloud(*segmented_cloud, *outputcloud1);
                     }
                     else if (number == 1)
                     {
@@ -128,7 +128,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x2 += dimensionX;
                         y2 += dimensionY;
                         z2 += dimensionZ;
-                        pcl::copyPointCloud(segmented_cloud, outputcloud2);
+                        pcl::copyPointCloud(*segmented_cloud, *outputcloud2);
                     }
                     else if (number == 2)
                     {
@@ -136,7 +136,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x3 += dimensionX;
                         y3 += dimensionY;
                         z3 += dimensionZ;
-                        pcl::copyPointCloud(segmented_cloud, outputcloud3);
+                        pcl::copyPointCloud(*segmented_cloud, *outputcloud3);
                     }
                     else if (number == 3)
                     {
@@ -144,7 +144,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x4 += dimensionX;
                         y4 += dimensionY;
                         z4 += dimensionZ;
-                        pcl::copyPointCloud(segmented_cloud, outputcloud4);
+                        pcl::copyPointCloud(*segmented_cloud, *outputcloud4);
                     }
                     else if (number == 4)
                     {
@@ -152,7 +152,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x5 += dimensionX;
                         y5 += dimensionY;
                         z5 += dimensionZ;
-                        pcl::copyPointCloud(segmented_cloud, outputcloud5);
+                        pcl::copyPointCloud(*segmented_cloud, *outputcloud5);
                     }
                 }
             }
