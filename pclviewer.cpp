@@ -120,7 +120,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x1 += dimensionX;
                         y1 += dimensionY;
                         z1 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *outputcloud1);
+                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box1));
                     }
                     else if (number == 1)
                     {
@@ -209,12 +209,27 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 
 //        return outputstring;
         outputdata.input = cloudnew;
-//        outputdata.dimensions1 = x1/10;
-//        outputdata.dimensions2 = x2/10;
-//        outputdata.dimensions3 = x3/10;
-//        outputdata.dimensions4 = x4/10;
-//        outputdata.dimensions5 = x5/10;
-//        outputdata
+        outputdata.dimensions1.push_back(x1/10);
+        outputdata.dimensions1.push_back(y1/10);
+        outputdata.dimensions1.push_back(z1/10);
+
+        outputdata.dimensions2.push_back(x2/10);
+        outputdata.dimensions2.push_back(y2/10);
+        outputdata.dimensions2.push_back(z2/10);
+
+        outputdata.dimensions3.push_back(x3/10);
+        outputdata.dimensions3.push_back(y3/10);
+        outputdata.dimensions3.push_back(z3/10);
+
+        outputdata.dimensions4.push_back(x4/10);
+        outputdata.dimensions4.push_back(y4/10);
+        outputdata.dimensions4.push_back(z4/10);
+
+        outputdata.dimensions5.push_back(x5/10);
+        outputdata.dimensions5.push_back(y5/10);
+        outputdata.dimensions5.push_back(z5/10);
+
+        outputdata.
 
 
     return outputdata;
