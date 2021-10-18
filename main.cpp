@@ -11,6 +11,7 @@ int main (int argc, char *argv[])
 /////
     char* ip = argv[1];
     PCLViewer w;
+    ObjectsData outputdata;
 /////
     try
     {
@@ -25,7 +26,9 @@ int main (int argc, char *argv[])
         tcp::socket socket(io_service);
         acceptor.accept(socket);
 
-        std::string data = w.Run(ip);
+//        std::string data = w.Run(ip);
+        std::string data = "test";
+        outputdata = w.Run(ip);
 
         boost::system::error_code ignored_error;
         boost::asio::write(socket, boost::asio::buffer(data), ignored_error);
