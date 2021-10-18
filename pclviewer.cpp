@@ -9,10 +9,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     Sensor s;
     ObjectsData outputdata;
 
-    coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    outputarray.clear();
-
     volumemean = 0.0;
     mean1 = 0.0;
     mean2 = 0.0;
@@ -24,21 +20,8 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     y1 = y2 = y3 = y4 = y5 = 0.0;
     z1 = z2 = z3 = z4 = z5 = 0.0;
 
-
     if (s.TestConnection(ipaddr, PORT) == false)
     {
-        outputarray.push_back("connection failed");
-
-        std::stringstream ss;
-
-        for(size_t i = 0; i < outputarray.size(); ++i)
-        {
-          if(i != 0)
-            ss << ",";
-          ss << outputarray[i];
-        }
-
-        outputstring = ss.str();
         return outputdata;
     }
     else
@@ -46,21 +29,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         for (size_t counter = 0; counter < 10; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
-            coloredinput.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-
             cloudnew = s.CamStream(ipaddr, PORT);
-            coloredinput->points.resize(cloudnew->points.size());
-
-            for (size_t i = 0; i < coloredinput->points.size(); i++)
-            {
-                coloredinput->points[i].x = (*cloudnew)[i].x;
-                coloredinput->points[i].y = (*cloudnew)[i].y;
-                coloredinput->points[i].z = (*cloudnew)[i].z;
-                coloredinput->points[i].r = 255;
-                coloredinput->points[i].g = 255;
-                coloredinput->points[i].b = 255;
-                coloredinput->points[i].a = 200;
-            }
 
             filteredcloud = c.FilterCloud(cloudnew);
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
@@ -85,8 +54,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             for (int number=0; number<limitcluster; ++number)
             {
                 segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-                coloredcloud->points.resize(clusters[number].indices.size());
                 segmented_cloud->points.resize(clusters[number].indices.size());
 
                 for(size_t i=0; i<clusters[number].indices.size(); ++i)
@@ -94,15 +61,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
                     segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
                     segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
-
-                    coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                    coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                    coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
-
-                    coloredcloud->points[i].r = cloudcolor[number][0];
-                    coloredcloud->points[i].g = cloudcolor[number][1];
-                    coloredcloud->points[i].b = cloudcolor[number][2];
-                    coloredcloud->points[i].a = 255;
                 }
 
                 std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
