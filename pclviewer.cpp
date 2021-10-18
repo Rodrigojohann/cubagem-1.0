@@ -128,7 +128,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x2 += dimensionX;
                         y2 += dimensionY;
                         z2 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *outputcloud2);
+                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box2));
                     }
                     else if (number == 2)
                     {
@@ -136,7 +136,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x3 += dimensionX;
                         y3 += dimensionY;
                         z3 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *outputcloud3);
+                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box3));
                     }
                     else if (number == 3)
                     {
@@ -144,7 +144,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x4 += dimensionX;
                         y4 += dimensionY;
                         z4 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *outputcloud4);
+                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box4));
                     }
                     else if (number == 4)
                     {
@@ -152,7 +152,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                         x5 += dimensionX;
                         y5 += dimensionY;
                         z5 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *outputcloud5);
+                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box5));
                     }
                 }
             }
@@ -166,48 +166,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         mean5 = mean5/10;
         volumemean = volumemean/10;
 
-//        X1 = to_string(x1/10);
-//        X2 = to_string(x2/10);
-//        X3 = to_string(x3/10);
-//        X4 = to_string(x4/10);
-//        X5 = to_string(x5/10);
 
-//        Y1 = to_string(y1/10);
-//        Y2 = to_string(y2/10);
-//        Y3 = to_string(y3/10);
-//        Y4 = to_string(y4/10);
-//        Y5 = to_string(y5/10);
-
-//        Z1 = to_string(z1/10);
-//        Z2 = to_string(z2/10);
-//        Z3 = to_string(z3/10);
-//        Z4 = to_string(z4/10);
-//        Z5 = to_string(z5/10);
-
-//        outputarray.push_back("{");
-//        outputarray.push_back("\"1\": {\"X\": \""+X1+"\", \"Y\": \""+Y1+"\", \"Z\": \""+Z1+"\"},");
-//        outputarray.push_back("\"2\": {\"X\": \""+X2+"\", \"Y\": \""+Y2+"\", \"Z\": \""+Z2+"\"},");
-//        outputarray.push_back("\"3\": {\"X\": \""+X3+"\", \"Y\": \""+Y3+"\", \"Z\": \""+Z3+"\"},");
-//        outputarray.push_back("\"4\": {\"X\": \""+X4+"\", \"Y\": \""+Y4+"\", \"Z\": \""+Z4+"\"},");
-//        outputarray.push_back("\"5\": {\"X\": \""+X5+"\", \"Y\": \""+Y5+"\", \"Z\": \""+Z5+"\"}");
-//        outputarray.push_back("}");
-////        outputarray.push_back({x2,y2,z2});
-////        outputarray.push_back({x3,y3,z3});
-////        outputarray.push_back({x4,y4,z4});
-////        outputarray.push_back({x5,y5,z5});
-
-//        std::stringstream ss;
-
-//        for(size_t i = 0; i < outputarray.size(); ++i)
-//        {
-////          if(i != 0)
-////            ss << ",";
-//          ss << outputarray[i];
-//        }
-
-//        outputstring = ss.str();
-
-//        return outputstring;
         outputdata.input = cloudnew;
         outputdata.dimensions1.push_back(x1/10);
         outputdata.dimensions1.push_back(y1/10);
@@ -228,9 +187,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(x5/10);
         outputdata.dimensions5.push_back(y5/10);
         outputdata.dimensions5.push_back(z5/10);
-
-        outputdata.
-
 
     return outputdata;
     }
