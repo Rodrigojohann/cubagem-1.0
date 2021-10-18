@@ -39,7 +39,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         }
 
         outputstring = ss.str();
-        return outputstring;
+        return outputdata;
     }
     else
     {
@@ -209,15 +209,15 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 
 //        return outputstring;
         outputdata.input = cloudnew;
-        outputdata.dimensions1 = x1/10;
-        outputdata.dimensions2 = x2/10;
-        outputdata.dimensions3 = x3/10;
-        outputdata.dimensions4 = x4/10;
-        outputdata.dimensions5 = x5/10;
+//        outputdata.dimensions1 = x1/10;
+//        outputdata.dimensions2 = x2/10;
+//        outputdata.dimensions3 = x3/10;
+//        outputdata.dimensions4 = x4/10;
+//        outputdata.dimensions5 = x5/10;
 //        outputdata
 
 
-
+    return outputdata;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
