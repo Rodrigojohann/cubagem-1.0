@@ -51,121 +51,99 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             cloudnew = s.CamStream(ipaddr, PORT);
             coloredinput->points.resize(cloudnew->points.size());
 
-            if (cloudnew->points.size() > 100)
+            for (size_t i = 0; i < coloredinput->points.size(); i++)
             {
-                for (size_t i = 0; i < coloredinput->points.size(); i++)
-                {
-                    coloredinput->points[i].x = (*cloudnew)[i].x;
-                    coloredinput->points[i].y = (*cloudnew)[i].y;
-                    coloredinput->points[i].z = (*cloudnew)[i].z;
-                    coloredinput->points[i].r = 255;
-                    coloredinput->points[i].g = 255;
-                    coloredinput->points[i].b = 255;
-                    coloredinput->points[i].a = 200;
-                }
+                coloredinput->points[i].x = (*cloudnew)[i].x;
+                coloredinput->points[i].y = (*cloudnew)[i].y;
+                coloredinput->points[i].z = (*cloudnew)[i].z;
+                coloredinput->points[i].r = 255;
+                coloredinput->points[i].g = 255;
+                coloredinput->points[i].b = 255;
+                coloredinput->points[i].a = 200;
+            }
 
-                filteredcloud = c.FilterCloud(cloudnew);
-                std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
+            filteredcloud = c.FilterCloud(cloudnew);
+            std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
-                notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
-                clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
+            notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+            clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
-                if (clusters.size() > 5)
-                {
-                    limitcluster = 5;
-                }
-                else
-                {
-                    limitcluster = clusters.size();
-                }
+            if (clusters.size() > 5)
+            {
+                limitcluster = 5;
+            }
+            else
+            {
+                limitcluster = clusters.size();
+            }
 
-                totalvolume = 0;
-                objvolume = 0;
+            totalvolume = 0;
+            objvolume = 0;
 
+            coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+
+            for (int number=0; number<limitcluster; ++number)
+            {
+                segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
+                coloredcloud->points.resize(clusters[number].indices.size());
+                segmented_cloud->points.resize(clusters[number].indices.size());
 
-                for (int number=0; number<limitcluster; ++number)
+                for(size_t i=0; i<clusters[number].indices.size(); ++i)
                 {
-                    segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
-                    coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
-                    coloredcloud->points.resize(clusters[number].indices.size());
-                    segmented_cloud->points.resize(clusters[number].indices.size());
+                    segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                    segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                    segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                    for(size_t i=0; i<clusters[number].indices.size(); ++i)
-                    {
-                        segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                    coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
+                    coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
+                    coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
 
-                        coloredcloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
-                        coloredcloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
-                        coloredcloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
+                    coloredcloud->points[i].r = cloudcolor[number][0];
+                    coloredcloud->points[i].g = cloudcolor[number][1];
+                    coloredcloud->points[i].b = cloudcolor[number][2];
+                    coloredcloud->points[i].a = 255;
+                }
 
-                        coloredcloud->points[i].r = cloudcolor[number][0];
-                        coloredcloud->points[i].g = cloudcolor[number][1];
-                        coloredcloud->points[i].b = cloudcolor[number][2];
-                        coloredcloud->points[i].a = 255;
-                    }
+                std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
-                    hullarea = c.SurfaceArea(segmented_cloud);
-                    std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
-
-                    //objvolume = hullarea*dimensionZ/100;
-                    objvolume = dimensionX*dimensionY*dimensionZ;
-                    totalvolume += objvolume;
-
-                    if (number == 0)
-                    {
-                        mean1 += objvolume;
-                        x1 += dimensionX;
-                        y1 += dimensionY;
-                        z1 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box1));
-                    }
-                    else if (number == 1)
-                    {
-                        mean2 += objvolume;
-                        x2 += dimensionX;
-                        y2 += dimensionY;
-                        z2 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box2));
-                    }
-                    else if (number == 2)
-                    {
-                        mean3 += objvolume;
-                        x3 += dimensionX;
-                        y3 += dimensionY;
-                        z3 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box3));
-                    }
-                    else if (number == 3)
-                    {
-                        mean4 += objvolume;
-                        x4 += dimensionX;
-                        y4 += dimensionY;
-                        z4 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box4));
-                    }
-                    else if (number == 4)
-                    {
-                        mean5 += objvolume;
-                        x5 += dimensionX;
-                        y5 += dimensionY;
-                        z5 += dimensionZ;
-                        pcl::copyPointCloud(*segmented_cloud, *(outputdata.box5));
-                    }
+                if (number == 0)
+                {
+                    x1 += dimensionX;
+                    y1 += dimensionY;
+                    z1 += dimensionZ;
+                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box1));
+                }
+                else if (number == 1)
+                {
+                    x2 += dimensionX;
+                    y2 += dimensionY;
+                    z2 += dimensionZ;
+                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box2));
+                }
+                else if (number == 2)
+                {
+                    x3 += dimensionX;
+                    y3 += dimensionY;
+                    z3 += dimensionZ;
+                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box3));
+                }
+                else if (number == 3)
+                {
+                    x4 += dimensionX;
+                    y4 += dimensionY;
+                    z4 += dimensionZ;
+                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box4));
+                }
+                else if (number == 4)
+                {
+                    x5 += dimensionX;
+                    y5 += dimensionY;
+                    z5 += dimensionZ;
+                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box5));
                 }
             }
-            volumemean += totalvolume;
         }
-
-        mean1 = mean1/10;
-        mean2 = mean2/10;
-        mean3 = mean3/10;
-        mean4 = mean4/10;
-        mean5 = mean5/10;
-        volumemean = volumemean/10;
-
 
         outputdata.input = cloudnew;
         outputdata.dimensions1.push_back(x1/10);
@@ -188,7 +166,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(y5/10);
         outputdata.dimensions5.push_back(z5/10);
 
-    return outputdata;
+        return outputdata;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
