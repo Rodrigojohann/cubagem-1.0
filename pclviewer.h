@@ -13,6 +13,9 @@
 #define IP (char*)"192.168.140.2"
 #define PORT 2114
 #include <sstream>
+#include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
 
 using namespace std;
 typedef std::vector<PointXYZ> CloudVector;
@@ -30,6 +33,20 @@ struct ObjectsData {
     pcl::PointCloud<pcl::PointXYZ>::Ptr box4;
     std::vector<double> dimensions5;
     pcl::PointCloud<pcl::PointXYZ>::Ptr box5;
+
+    template<typename archive> void serialize(archive& ar, const unsigned /*version*/) {
+        ar & input;
+        ar & dimensions1;
+        ar & box1;
+        ar & dimensions2;
+        ar & box2;
+        ar & dimensions3;
+        ar & box3;
+        ar & dimensions4;
+        ar & box4;
+        ar & dimensions5;
+        ar & box5;
+    }
 
 };
 
