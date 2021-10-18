@@ -9,13 +9,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     Sensor s;
     ObjectsData outputdata;
 
-    volumemean = 0.0;
-    mean1 = 0.0;
-    mean2 = 0.0;
-    mean3 = 0.0;
-    mean4 = 0.0;
-    mean5 = 0.0;
-
     x1 = x2 = x3 = x4 = x5 = 0.0;
     y1 = y2 = y3 = y4 = y5 = 0.0;
     z1 = z2 = z3 = z4 = z5 = 0.0;
@@ -46,10 +39,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                 limitcluster = clusters.size();
             }
 
-            totalvolume = 0;
-            objvolume = 0;
-
-            coloredcloud.reset(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
             for (int number=0; number<limitcluster; ++number)
             {
