@@ -214,7 +214,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions3 = x3/10;
         outputdata.dimensions4 = x4/10;
         outputdata.dimensions5 = x5/10;
-        outputdata
+//        outputdata
 
 
 
