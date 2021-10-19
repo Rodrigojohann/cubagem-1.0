@@ -92,7 +92,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             }
         }
 
-        outputdata.input = cloudnew;
+        outputdata.input = ConvertCloudtoVector(cloudnew);
         outputdata.dimensions1.push_back(x1/10);
         outputdata.dimensions1.push_back(y1/10);
         outputdata.dimensions1.push_back(z1/10);
@@ -133,6 +133,7 @@ std::vector<short> ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr clou
 ////
      for (std::size_t i = 0; i < nr_points; ++i)
      {
+         const pcl::PointXYZ& point = (*cloud)[i]
          points[j*3 + 0] = static_cast<short>(point.x * conversion_factor);
          points[j*3 + 1] = static_cast<short>(point.y * conversion_factor);
          points[j*3 + 2] = static_cast<short>(point.z * conversion_factor);
