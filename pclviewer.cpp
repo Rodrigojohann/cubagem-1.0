@@ -133,7 +133,7 @@ std::vector<short> ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr clou
 ////
      for (std::size_t i = 0; i < nr_points; ++i)
      {
-         const pcl::PointXYZ& point = (*cloud)[i]
+         const pcl::PointXYZ& point = (*cloud)[i];
          points[j*3 + 0] = static_cast<short>(point.x * conversion_factor);
          points[j*3 + 1] = static_cast<short>(point.y * conversion_factor);
          points[j*3 + 2] = static_cast<short>(point.z * conversion_factor);
