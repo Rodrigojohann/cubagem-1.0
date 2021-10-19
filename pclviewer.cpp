@@ -59,35 +59,35 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     x1 += dimensionX;
                     y1 += dimensionY;
                     z1 += dimensionZ;
-                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box1));
+                    outputcloud1 = ConvertCloudtoVector(segmented_cloud);
                 }
                 else if (number == 1)
                 {
                     x2 += dimensionX;
                     y2 += dimensionY;
                     z2 += dimensionZ;
-                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box2));
+                    outputcloud2 = ConvertCloudtoVector(segmented_cloud);
                 }
                 else if (number == 2)
                 {
                     x3 += dimensionX;
                     y3 += dimensionY;
                     z3 += dimensionZ;
-                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box3));
+                    outputcloud3 = ConvertCloudtoVector(segmented_cloud);
                 }
                 else if (number == 3)
                 {
                     x4 += dimensionX;
                     y4 += dimensionY;
                     z4 += dimensionZ;
-                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box4));
+                    outputcloud4 = ConvertCloudtoVector(segmented_cloud);
                 }
                 else if (number == 4)
                 {
                     x5 += dimensionX;
                     y5 += dimensionY;
                     z5 += dimensionZ;
-                    pcl::copyPointCloud(*segmented_cloud, *(outputdata.box5));
+                    outputcloud5 = ConvertCloudtoVector(segmented_cloud);
                 }
             }
         }
@@ -113,7 +113,33 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(y5/10);
         outputdata.dimensions5.push_back(z5/10);
 
+        outputdata.box1 = outputcloud1;
+        outputdata.box2 = outputcloud2;
+        outputdata.box3 = outputcloud3;
+        outputdata.box4 = outputcloud4;
+        outputdata.box5 = outputcloud5;
+
         return outputdata;
     }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<short> ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+// var
+     std::vector<short> points;
+     std::size_t nr_points = cloud->points.size();
+     std::size_t j = 0;
+     const int conversion_factor = 500;
+////
+     for (std::size_t i = 0; i < nr_points; ++i)
+     {
+         points[j*3 + 0] = static_cast<short>(point.x * conversion_factor);
+         points[j*3 + 1] = static_cast<short>(point.y * conversion_factor);
+         points[j*3 + 2] = static_cast<short>(point.z * conversion_factor);
+
+         ++j;
+     }
+     points.resize(j*3);
+     return points;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

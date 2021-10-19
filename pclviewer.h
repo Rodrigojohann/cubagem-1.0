@@ -22,17 +22,17 @@ typedef std::vector<PointXYZ> CloudVector;
 
 struct ObjectsData {
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr input;
+    std::vector<short> input;
     std::vector<double> dimensions1;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr box1;
+    std::vector<short> box1;
     std::vector<double> dimensions2;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr box2;
+    std::vector<short> box2;
     std::vector<double> dimensions3;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr box3;
+    std::vector<short> box3;
     std::vector<double> dimensions4;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr box4;
+    std::vector<short> box4;
     std::vector<double> dimensions5;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr box5;
+    std::vector<short> box5;
 
     template<typename archive> void serialize(archive& ar, const unsigned /*version*/) {
         ar & input;
@@ -56,6 +56,7 @@ class PCLViewer
 
 //    string Run(char* ipaddr);
     ObjectsData Run(char* ipaddr);
+    std::vector<short> ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr);
 
   protected:
 
@@ -76,5 +77,5 @@ class PCLViewer
     string                                  Z1, Z2, Z3, Z4, Z5;
     int                                     limitcluster;
     int                                     clusternumber;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr     outputcloud1, outputcloud2, outputcloud3, outputcloud4, outputcloud5;
+    std::vector<short>                      outputcloud1, outputcloud2, outputcloud3, outputcloud4, outputcloud5;
 };
