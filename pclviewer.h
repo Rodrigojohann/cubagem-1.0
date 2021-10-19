@@ -22,6 +22,7 @@ typedef std::vector<PointXYZ> CloudVector;
 
 struct ObjectsData {
 
+    using Ptr = std::shared_ptr<ObjectsData>;
     std::vector<short> input;
     std::vector<double> dimensions1;
     std::vector<short> box1;
