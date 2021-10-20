@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
         unsigned int nr_points = 0;
         ObjectsData outputdata = w.Run(ip);
 
-        nr_points = static_cast<unsigned int> (11/3);
+        nr_points = static_cast<unsigned int> (outputdata->size()/3);;
 
         boost::asio::write (socket, boost::asio::buffer (&nr_points, sizeof (nr_points)));
 

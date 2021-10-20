@@ -22,7 +22,6 @@ typedef std::vector<PointXYZ> CloudVector;
 
 struct ObjectsData {
 
-    using Ptr = std::shared_ptr<ObjectsData>;
     std::vector<short> input;
     std::vector<double> dimensions1;
     std::vector<short> box1;
@@ -56,7 +55,7 @@ class PCLViewer
   public:
 
 //    string Run(char* ipaddr);
-    ObjectsData::Ptr Run(char* ipaddr);
+    ObjectsData Run(char* ipaddr);
     void ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
   protected:
