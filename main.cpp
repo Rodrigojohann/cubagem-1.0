@@ -27,20 +27,20 @@ int main (int argc, char *argv[])
         unsigned int nr_points = 0;
         ObjectsData outputdata = w.Run(ip);
 
-        nr_points = static_cast<unsigned int> (outputdata->size()/3);;
-
-        boost::asio::write (socket, boost::asio::buffer (&nr_points, sizeof (nr_points)));
-
+        boost::system::error_code ignored_error;
         acceptor.accept(socket);
 
-        boost::asio::write (socket, boost::asio::buffer(&outputdata.input.front(), nr_points * 3 * sizeof (short)));
+        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
+        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
+//        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
+//        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
 
 //        std::string data = w.Run(ip);
-        std::string data = "test";
+//        std::string data = "test";
 //        outputdata = w.Run(ip);
 
-        boost::system::error_code ignored_error;
-        boost::asio::write(socket, boost::asio::buffer(data), ignored_error);
+
+//        boost::asio::write(socket, boost::asio::buffer(data), ignored_error);
       }
     }
     catch (std::exception& e)
