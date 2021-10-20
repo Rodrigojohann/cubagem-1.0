@@ -30,7 +30,7 @@ int main (int argc, char *argv[])
         boost::system::error_code ignored_error;
         acceptor.accept(socket);
 
-        boost::asio::write (socket, boost::asio::buffer(&outputdata.input.front(), sizeof(&outputdata.input)), ignored_error);
+        boost::asio::write (socket, boost::asio::buffer(&outputdata, sizeof(outputdata)), ignored_error);
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
