@@ -7,7 +7,8 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 ////////
     Controller c;
     Sensor s;
-    ObjectsData outputdata;
+    ObjectsData::Ptr outputdata = ObjectsData::Ptr(new ObjectsData);
+//    PointCloudBuffers::Ptr new_buffers = PointCloudBuffers::Ptr(new PointCloudBuffers);
 
     x1 = x2 = x3 = x4 = x5 = 0.0;
     y1 = y2 = y3 = y4 = y5 = 0.0;

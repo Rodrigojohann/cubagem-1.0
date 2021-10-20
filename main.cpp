@@ -26,10 +26,14 @@ int main (int argc, char *argv[])
       {
         unsigned int nr_points = 0;
         ObjectsData outputdata = w.Run(ip);
-        nr_points = static_cast<unsigned int> (sizeof(outputdata)/3);
+
+        nr_points = static_cast<unsigned int> (11/3);
+
         boost::asio::write (socket, boost::asio::buffer (&nr_points, sizeof (nr_points)));
 
         acceptor.accept(socket);
+
+        boost::asio::write (socket, boost::asio::buffer(&outputdata.input.front(), nr_points * 3 * sizeof (short)));
 
 //        std::string data = w.Run(ip);
         std::string data = "test";
@@ -41,7 +45,7 @@ int main (int argc, char *argv[])
     }
     catch (std::exception& e)
     {
-      std::cerr << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
     }
 
     return 0;
