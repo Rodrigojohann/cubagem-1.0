@@ -25,12 +25,15 @@ int main (int argc, char *argv[])
       for (;;)
       {
         unsigned int nr_points = 0;
-        ObjectsData outputdata = w.Run(ip);
+
 
         boost::system::error_code ignored_error;
         acceptor.accept(socket);
 
-        boost::asio::write (socket, boost::asio::buffer(&outputdata, sizeof(outputdata)), ignored_error);
+        ObjectsData outputdata = w.Run(ip);
+
+        boost::asio::write (socket, boost::asio::buffer(&outputdata.dimensions1.front(), sizeof(outputdata)), ignored_error);
+
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
