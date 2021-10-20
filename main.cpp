@@ -20,10 +20,10 @@ int main (int argc, char *argv[])
       boost::asio::ip::address ip_address = boost::asio::ip::address::from_string("0.0.0.0", ec);
 
       tcp::acceptor acceptor(io_service, tcp::endpoint(ip_address, 13));
-      tcp::socket socket(io_service);
 
       for (;;)
       {
+        tcp::socket socket(io_service);
         unsigned int nr_points = 0;
 
 
