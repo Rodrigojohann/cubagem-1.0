@@ -56,7 +56,7 @@ class PCLViewer
   public:
 
 //    string Run(char* ipaddr);
-    ObjectsData Run(char* ipaddr);
+    ObjectsData::Ptr Run(char* ipaddr);
     void ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
   protected:

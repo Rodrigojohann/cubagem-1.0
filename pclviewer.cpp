@@ -3,7 +3,7 @@
 using namespace std;
 
 //string PCLViewer::Run(char* ipaddr){
-ObjectsData PCLViewer::Run(char* ipaddr){
+ObjectsData::Ptr PCLViewer::Run(char* ipaddr){
 ////////
     Controller c;
     Sensor s;
