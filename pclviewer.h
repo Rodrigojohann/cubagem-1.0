@@ -14,7 +14,8 @@
 #define PORT 2114
 #include <sstream>
 #include <boost/serialization/serialization.hpp>
-#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 
 using namespace std;
