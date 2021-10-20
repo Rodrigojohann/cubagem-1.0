@@ -93,7 +93,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 //            }
 //        }
 
-        outputdata.input = ConvertCloudtoVector(cloudnew);
+//        outputdata.input = ConvertCloudtoVector(cloudnew);
 //        outputdata.dimensions1.push_back(x1/10);
 //        outputdata.dimensions1.push_back(y1/10);
 //        outputdata.dimensions1.push_back(z1/10);
@@ -134,11 +134,11 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(10);
         outputdata.dimensions5.push_back(10);
 
-        outputdata.box1 = outputcloud1;
-        outputdata.box2 = outputcloud2;
-        outputdata.box3 = outputcloud3;
-        outputdata.box4 = outputcloud4;
-        outputdata.box5 = outputcloud5;
+//        outputdata.box1 = outputcloud1;
+//        outputdata.box2 = outputcloud2;
+//        outputdata.box3 = outputcloud3;
+//        outputdata.box4 = outputcloud4;
+//        outputdata.box5 = outputcloud5;
 
         return outputdata;
     }
