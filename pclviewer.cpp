@@ -93,32 +93,32 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             }
         }
 
-        outputdata.input = ConvertCloudtoVector(cloudnew);
-        outputdata.dimensions1.push_back(x1/10);
-        outputdata.dimensions1.push_back(y1/10);
-        outputdata.dimensions1.push_back(z1/10);
+        outputdata->input = ConvertCloudtoVector(cloudnew);
+        outputdata->dimensions1.push_back(x1/10);
+        outputdata->dimensions1.push_back(y1/10);
+        outputdata->dimensions1.push_back(z1/10);
 
-        outputdata.dimensions2.push_back(x2/10);
-        outputdata.dimensions2.push_back(y2/10);
-        outputdata.dimensions2.push_back(z2/10);
+        outputdata->dimensions2.push_back(x2/10);
+        outputdata->dimensions2.push_back(y2/10);
+        outputdata->dimensions2.push_back(z2/10);
 
-        outputdata.dimensions3.push_back(x3/10);
-        outputdata.dimensions3.push_back(y3/10);
-        outputdata.dimensions3.push_back(z3/10);
+        outputdata->dimensions3.push_back(x3/10);
+        outputdata->dimensions3.push_back(y3/10);
+        outputdata->dimensions3.push_back(z3/10);
 
-        outputdata.dimensions4.push_back(x4/10);
-        outputdata.dimensions4.push_back(y4/10);
-        outputdata.dimensions4.push_back(z4/10);
+        outputdata->dimensions4.push_back(x4/10);
+        outputdata->dimensions4.push_back(y4/10);
+        outputdata->dimensions4.push_back(z4/10);
 
-        outputdata.dimensions5.push_back(x5/10);
-        outputdata.dimensions5.push_back(y5/10);
-        outputdata.dimensions5.push_back(z5/10);
+        outputdata->dimensions5.push_back(x5/10);
+        outputdata->dimensions5.push_back(y5/10);
+        outputdata->dimensions5.push_back(z5/10);
 
-        outputdata.box1 = outputcloud1;
-        outputdata.box2 = outputcloud2;
-        outputdata.box3 = outputcloud3;
-        outputdata.box4 = outputcloud4;
-        outputdata.box5 = outputcloud5;
+        outputdata->box1 = outputcloud1;
+        outputdata->box2 = outputcloud2;
+        outputdata->box3 = outputcloud3;
+        outputdata->box4 = outputcloud4;
+        outputdata->box5 = outputcloud5;
 
         return outputdata;
     }
