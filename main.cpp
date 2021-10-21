@@ -84,8 +84,13 @@ int main(int argc, char* argv[])
     unsigned short port = boost::lexical_cast<unsigned short>(13);
 
     boost::asio::io_service io_service;
+
+    for (;;)
+    {
+
     s11n_example::server server(io_service, port);
     io_service.run();
+    }
   }
   catch (std::exception& e)
   {
