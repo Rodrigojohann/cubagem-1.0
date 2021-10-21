@@ -135,11 +135,11 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(10);
         outputdata.dimensions5.push_back(10);
 
-        outputdata.box1 = [0];
-        outputdata.box2 = [0];
-        outputdata.box3 = [0];
-        outputdata.box4 = [0];
-        outputdata.box5 = [0];
+        outputdata.box1.push_back(0);
+        outputdata.box2.push_back(0);
+        outputdata.box3.push_back(0);
+        outputdata.box4.push_back(0);
+        outputdata.box5.push_back(0);
 
 //        outputdata.box1 = outputcloud1;
 //        outputdata.box2 = outputcloud2;
