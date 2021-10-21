@@ -24,7 +24,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
 
-//            cloudnew = s.CamStream(ipaddr, PORT);
+            cloudnew = s.CamStream(ipaddr, PORT);
 
 //            filteredcloud = c.FilterCloud(cloudnew);
 //            std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
@@ -155,10 +155,11 @@ std::vector<short> PCLViewer::ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ
 {
 // var
      std::vector<short> points;
-     std::size_t nr_points = cloud->points.size()*3;
+     std::size_t nr_points = cloud->points.size();
      std::size_t j = 0;
      const int conversion_factor = 500;
 ////
+     points.resize(nr_points*3);
      for (std::size_t i = 0; i < nr_points; ++i)
      {
          points[j*3 + 0] = static_cast<short>((*cloud)[i].x * conversion_factor);
@@ -167,7 +168,7 @@ std::vector<short> PCLViewer::ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ
 
          ++j;
      }
-     points.resize(j*3);
+//     points.resize(j*3);
      return points;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
