@@ -16,9 +16,10 @@ class server
 public:
   /// Constructor opens the acceptor and starts waiting for the first incoming
   /// connection.
-  server(boost::asio::io_service& io_service, unsigned short port, char* ip) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", ec), port, ip))
+  server(boost::asio::io_service& io_service, unsigned short port) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", ec), port))
   {
     PCLViewer w;
+    char* ip = "192.168.140.2";
 
     ObjectsData outputdata = w.Run(ip);
     sentdata.push_back(outputdata);
