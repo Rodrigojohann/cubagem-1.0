@@ -19,7 +19,7 @@ public:
   server(boost::asio::io_service& io_service, unsigned short port) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", ec), port))
   {
     PCLViewer w;
-    char* ip = "192.168.140.2";
+    ip = "192.168.140.2";
 
     ObjectsData outputdata = w.Run(ip);
     sentdata.push_back(outputdata);
@@ -53,6 +53,8 @@ public:
     // Nothing to do. The socket will be closed automatically when the last
     // reference to the connection object goes away.
   }
+
+  char* ip;
 
 private:
   /// The acceptor object used to accept incoming socket connections.
