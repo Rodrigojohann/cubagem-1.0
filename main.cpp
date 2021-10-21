@@ -117,14 +117,11 @@ int main (int argc, char *argv[])
       for (;;)
       {
         tcp::socket socket(io_service);
-        unsigned int nr_points = 0;
-
-
-        boost::system::error_code ignored_error;
         acceptor.accept(socket);
 
         ObjectsData outputdata = w.Run(ip);
 
+        boost::system::error_code ignored_error;
         boost::asio::write (socket, boost::asio::buffer(&outputdata, sizeof(outputdata)), ignored_error);
 
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
