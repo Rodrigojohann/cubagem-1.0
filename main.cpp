@@ -70,7 +70,7 @@ private:
 int main(int argc, char* argv[])
 {
 /////
-    char* ip = argv[1];
+    s11n_example::server ip = argv[1];
     PCLViewer w;
 /////
 
