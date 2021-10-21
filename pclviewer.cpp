@@ -20,9 +20,15 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     }
     else
     {
-//        for (size_t counter = 0; counter < 10; ++counter)
-//        {
-//            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
+        for (size_t counter = 0; counter < 10; ++counter)
+        {
+            cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            outputcloud2.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            outputcloud3.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            outputcloud4.reset(new pcl::PointCloud<pcl::PointXYZ>);
+            outputcloud5.reset(new pcl::PointCloud<pcl::PointXYZ>);
+
 //            cloudnew = s.CamStream(ipaddr, PORT);
 
 //            filteredcloud = c.FilterCloud(cloudnew);
@@ -91,9 +97,9 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 //                    outputcloud5 = ConvertCloudtoVector(segmented_cloud);
 //                }
 //            }
-//        }
+        }
 
-//        outputdata.input = ConvertCloudtoVector(cloudnew);
+        outputdata.input = ConvertCloudtoVector(cloudnew);
 //        outputdata.dimensions1.push_back(x1/10);
 //        outputdata.dimensions1.push_back(y1/10);
 //        outputdata.dimensions1.push_back(z1/10);
@@ -133,6 +139,12 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(10);
         outputdata.dimensions5.push_back(10);
         outputdata.dimensions5.push_back(10);
+
+        outputdata.box1 = ConvertCloudtoVector(outputcloud1);
+        outputdata.box2 = ConvertCloudtoVector(outputcloud2);
+        outputdata.box3 = ConvertCloudtoVector(outputcloud3);
+        outputdata.box4 = ConvertCloudtoVector(outputcloud4);
+        outputdata.box5 = ConvertCloudtoVector(outputcloud5);
 
 //        outputdata.box1 = outputcloud1;
 //        outputdata.box2 = outputcloud2;
