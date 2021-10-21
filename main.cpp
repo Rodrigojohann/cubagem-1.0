@@ -16,7 +16,7 @@ class server
 public:
   /// Constructor opens the acceptor and starts waiting for the first incoming
   /// connection.
-  server(boost::asio::io_service& io_service, unsigned short port) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", boost::system::error_code ec), port, ip))
+  server(boost::asio::io_service& io_service, unsigned short port, char* ip) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", ec), port, ip))
   {
     PCLViewer w;
 
@@ -56,6 +56,7 @@ public:
 private:
   /// The acceptor object used to accept incoming socket connections.
   boost::asio::ip::tcp::acceptor acceptor_;
+  boost::system::error_code ec;
 
   /// The data to be sent to each client.
   std::vector<ObjectsData> sentdata;
