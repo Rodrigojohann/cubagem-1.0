@@ -16,7 +16,7 @@ class server
 public:
   /// Constructor opens the acceptor and starts waiting for the first incoming
   /// connection.
-  server(boost::asio::io_service& io_service, unsigned short port) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", ec), port))
+  server(boost::asio::io_service& io_service, unsigned short port) : acceptor_(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string("0.0.0.0", boost::system::error_code ec), port, ip))
   {
     PCLViewer w;
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     unsigned short port = boost::lexical_cast<unsigned short>(13);
 
     boost::asio::io_service io_service;
-    s11n_example::server server(io_service, port);
+    s11n_example::server server(io_service, port, ip);
     io_service.run();
   }
   catch (std::exception& e)
