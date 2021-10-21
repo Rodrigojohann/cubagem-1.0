@@ -192,30 +192,30 @@ int main(int argc, char* argv[])
       else if (error)
         throw boost::system::system_error(error); // Some other error.
 
-          if (!error)
-          {
-            // Print out the data that was received.
-            for (std::size_t i = 0; i < readdata.size(); ++i)
-            {
-              std::cout << "Data number " << i+1 << "\n";
-              std::cout << "  Input cloud size: " << readdata[i].input.size() << "\n";
-              std::cout << "  Object 1 cloud size: " << readdata[i].box1.size() << "\n";
-              std::cout << "  Object 1 dimensions: X: " << readdata[i].dimensions1[0] << "; Y: " << readdata[i].dimensions1[1] << "; Z: " << readdata[i].dimensions1[2] << "\n";
-              std::cout << "  Object 2 cloud size: " << readdata[i].box2.size() << "\n";
-              std::cout << "  Object 2 dimensions: X: " << readdata[i].dimensions2[0] << "; Y: " << readdata[i].dimensions2[1] << "; Z: " << readdata[i].dimensions2[2] << "\n";
-              std::cout << "  Object 3 cloud size: " << readdata[i].box3.size() << "\n";
-              std::cout << "  Object 3 dimensions: X: " << readdata[i].dimensions3[0] << "; Y: " << readdata[i].dimensions3[1] << "; Z: " << readdata[i].dimensions3[2] << "\n";
-              std::cout << "  Object 4 cloud size: " << readdata[i].box4.size() << "\n";
-              std::cout << "  Object 4 dimensions: X: " << readdata[i].dimensions4[0] << "; Y: " << readdata[i].dimensions4[1] << "; Z: " << readdata[i].dimensions4[2] << "\n";
-              std::cout << "  Object 5 cloud size: " << readdata[i].box5.size() << "\n";
-              std::cout << "  Object 5 dimensions: X: " << readdata[i].dimensions5[0] << "; Y: " << readdata[i].dimensions5[1] << "; Z: " << readdata[i].dimensions5[2] << "\n";
-            }
-          }
-          else
-          {
-            // An error occurred.
-            std::cerr << error.message() << std::endl;
-          }
+//          if (!error)
+//          {
+//            // Print out the data that was received.
+//            for (std::size_t i = 0; i < readdata.size(); ++i)
+//            {
+//              std::cout << "Data number " << i+1 << "\n";
+//              std::cout << "  Input cloud size: " << readdata[i].input.size() << "\n";
+//              std::cout << "  Object 1 cloud size: " << readdata[i].box1.size() << "\n";
+//              std::cout << "  Object 1 dimensions: X: " << readdata[i].dimensions1[0] << "; Y: " << readdata[i].dimensions1[1] << "; Z: " << readdata[i].dimensions1[2] << "\n";
+//              std::cout << "  Object 2 cloud size: " << readdata[i].box2.size() << "\n";
+//              std::cout << "  Object 2 dimensions: X: " << readdata[i].dimensions2[0] << "; Y: " << readdata[i].dimensions2[1] << "; Z: " << readdata[i].dimensions2[2] << "\n";
+//              std::cout << "  Object 3 cloud size: " << readdata[i].box3.size() << "\n";
+//              std::cout << "  Object 3 dimensions: X: " << readdata[i].dimensions3[0] << "; Y: " << readdata[i].dimensions3[1] << "; Z: " << readdata[i].dimensions3[2] << "\n";
+//              std::cout << "  Object 4 cloud size: " << readdata[i].box4.size() << "\n";
+//              std::cout << "  Object 4 dimensions: X: " << readdata[i].dimensions4[0] << "; Y: " << readdata[i].dimensions4[1] << "; Z: " << readdata[i].dimensions4[2] << "\n";
+//              std::cout << "  Object 5 cloud size: " << readdata[i].box5.size() << "\n";
+//              std::cout << "  Object 5 dimensions: X: " << readdata[i].dimensions5[0] << "; Y: " << readdata[i].dimensions5[1] << "; Z: " << readdata[i].dimensions5[2] << "\n";
+//            }
+//          }
+//          else
+//          {
+//            // An error occurred.
+//            std::cerr << error.message() << std::endl;
+//          }
     }
   }
   catch (std::exception& e)

@@ -118,11 +118,14 @@ int main (int argc, char *argv[])
       {
         tcp::socket socket(io_service);
         acceptor.accept(socket);
+        std::vector<ObjectsData> sentdata;
 
         ObjectsData outputdata = w.Run(ip);
+        sentdata.push_back(outputdata);
+
 
         boost::system::error_code ignored_error;
-        boost::asio::write (socket, boost::asio::buffer(&outputdata, sizeof(outputdata)), ignored_error);
+        boost::asio::write (socket, boost::asio::buffer(sentdata), ignored_error);
 
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
