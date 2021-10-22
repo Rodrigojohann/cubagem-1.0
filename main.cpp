@@ -4,10 +4,13 @@
 #include <boost/lexical_cast.hpp>
 #include "connection.hpp" // Must come before boost/serialization headers.
 #include <boost/serialization/vector.hpp>
+#include <boost/thread.hpp>
 
 using namespace boost;
 using boost::asio::ip::tcp;
-char* ip;
+static boost::mutex mx;
+
+//char* ip;
 
 //namespace s11n_example {
 
@@ -125,7 +128,9 @@ int main (int argc, char *argv[])
 
 
         boost::system::error_code ignored_error;
-        boost::asio::write (socket, boost::asio::buffer(sentdata), ignored_error);
+        boost::asio::write (socket, boost::asio::buffer(&sentdata, sizeof(sentdata)), ignored_error);
+
+        boost::lock_guard<boost::mutex> lk(mx);
 
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
