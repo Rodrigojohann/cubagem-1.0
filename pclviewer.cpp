@@ -26,6 +26,10 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             cloudnew = s.CamStream(ipaddr, PORT);
 
             filteredcloud = c.FilterCloud(cloudnew);
+
+            if (filteredcloud->points.size() > 10)
+            {
+
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
             notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
@@ -90,6 +94,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     z5 += dimensionZ;
                     outputcloud5 = ConvertCloudtoVector(segmented_cloud);
                 }
+            }
             }
         }
 
