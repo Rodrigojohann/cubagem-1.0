@@ -13,12 +13,12 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     y1 = y2 = y3 = y4 = y5 = 0.0;
     z1 = z2 = z3 = z4 = z5 = 0.0;
 
-    if (s.TestConnection(ipaddr, PORT) == false)
-    {
-        return outputdata;
-    }
-    else
-    {
+//    if (s.TestConnection(ipaddr, PORT) == false)
+//    {
+//        return outputdata;
+//    }
+//    else
+//    {
         for (size_t counter = 0; counter < 10; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
@@ -146,7 +146,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.box5 = outputcloud5;
 
         return outputdata;
-    }
+//    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<short> PCLViewer::ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)

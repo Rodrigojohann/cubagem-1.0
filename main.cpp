@@ -3,6 +3,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include "sensor.h"
 
 using namespace boost;
 using boost::asio::ip::tcp;
@@ -12,12 +13,19 @@ int main (int argc, char *argv[])
 /////
     char* ip = argv[1];
     PCLViewer w;
+    Sensor s;
 /////
 
     if (argc != 2)
     {
       std::cerr << "Usage: insert camera ip" << std::endl;
       return 1;
+    }
+
+    if (s.TestConnection(ipaddr, PORT) == false)
+    {
+        std::cerr << "Could not connect to camera" << std::endl;
+        return 1;
     }
 
     try
