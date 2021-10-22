@@ -11,7 +11,6 @@
 
 using namespace boost;
 using boost::asio::ip::tcp;
-static boost::mutex mx;
 
 
 int main (int argc, char *argv[])
@@ -44,7 +43,7 @@ int main (int argc, char *argv[])
         oa << outputdata;
 
         boost::system::error_code ignored_error;
-        boost::asio::write (socket, boost::asio::buffer(buf), ignored_error);
+        boost::asio::write (socket, buf, ignored_error);
       }
     }
     catch (std::exception& e)
