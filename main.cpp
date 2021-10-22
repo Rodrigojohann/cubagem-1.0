@@ -6,6 +6,8 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/thread.hpp>
 #include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 using namespace boost;
 using boost::asio::ip::tcp;
