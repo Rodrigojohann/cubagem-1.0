@@ -18,6 +18,9 @@
 #include "../connection.hpp" // Must come before boost/serialization headers.
 #include <boost/serialization/vector.hpp>
 #include <boost/thread.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 
 using boost::asio::ip::tcp;
@@ -186,17 +189,20 @@ int main(int argc, char* argv[])
     for (;;)
     {
       std::vector<ObjectsData> readdata;
-      boost::array<char, 128> buf;
+     boost::asio::streambuf buf;
       boost::system::error_code error;
 
 
 //      size_t len = socket.read_some(boost::asio::buffer(buf), error);
 
-//      std::size_t length = boost::asio::read(socket, boost::asio::buffer(&readdata, sizeof(readdata)), error);
-        size_t len = socket.read_some(boost::asio::buffer(readdata), error);
+      std::size_t length = boost::asio::read(socket, buf, error);
+//        size_t len = socket.read_some(boost::asio::buffer(buf), error);
 //      boost::lock_guard<boost::mutex> lk(mx);
 
+        std::istream is(&buf);
+        boost::archive::binary_iarchive ia(is);
 
+        ia >> readdata;
 
       if (error == boost::asio::error::eof)
         break; // Connection closed cleanly by peer.
@@ -209,7 +215,7 @@ int main(int argc, char* argv[])
             for (std::size_t i = 0; i < readdata.size(); ++i)
             {
               std::cout << "Data number " << i+1 << "\n";
-//              std::cout << "  Input cloud size: " << readdata[i].input.size() << "\n";
+              std::cout << "  Input cloud size: " << readdata[i].input.size() << "\n";
 //              std::cout << "  Object 1 cloud size: " << readdata[i].box1.size() << "\n";
 //              std::cout << "  Object 1 dimensions: X: " << readdata[i].dimensions1[0] << "; Y: " << readdata[i].dimensions1[1] << "; Z: " << readdata[i].dimensions1[2] << "\n";
 //              std::cout << "  Object 2 cloud size: " << readdata[i].box2.size() << "\n";

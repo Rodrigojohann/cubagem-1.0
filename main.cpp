@@ -5,6 +5,7 @@
 #include "connection.hpp" // Must come before boost/serialization headers.
 #include <boost/serialization/vector.hpp>
 #include <boost/thread.hpp>
+#include <boost/serialization/serialization.hpp>
 
 using namespace boost;
 using boost::asio::ip::tcp;
@@ -123,14 +124,19 @@ int main (int argc, char *argv[])
         acceptor.accept(socket);
         std::vector<ObjectsData> sentdata;
 
+       boost::asio::streambuf buf;
+       std::ostream os(&buf);
+       boost::archive::binary_oarchive oa(os);
+
         ObjectsData outputdata = w.Run(ip);
         sentdata.push_back(outputdata);
 
+       oa << outputdata;
 
         boost::system::error_code ignored_error;
-        boost::asio::write (socket, boost::asio::buffer(&sentdata, sizeof(sentdata)), ignored_error);
+        boost::asio::write (socket, boost::asio::buffer(buf), ignored_error);
 
-        boost::lock_guard<boost::mutex> lk(mx);
+//        boost::lock_guard<boost::mutex> lk(mx);
 
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.box1.front(), sizeof(outputdata.box1)));
 //        boost::asio::write (socket, boost::asio::buffer(outputdata.input.front(), sizeof(outputdata.input)));
