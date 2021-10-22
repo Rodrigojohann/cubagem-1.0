@@ -13,6 +13,13 @@ int main (int argc, char *argv[])
     char* ip = argv[1];
     PCLViewer w;
 /////
+
+    if (argc != 2)
+    {
+      std::cerr << "Usage: insert camera ip" << std::endl;
+      return 1;
+    }
+
     try
     {
       boost::asio::io_service io_service;
