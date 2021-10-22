@@ -69,8 +69,10 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setDistanceThreshold (0.2);
 
+    if (outputcloud->points.size()> 0 ){
     seg.setInputCloud (outputcloud);
     seg.segment (*inliers, *coefficients);
+    }
 
     outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
     outputcloud1->points.resize(inliers->indices.size());
