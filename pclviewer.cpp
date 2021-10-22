@@ -27,12 +27,16 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 
             filteredcloud = c.FilterCloud(cloudnew);
 
-            if (filteredcloud->points.size() > 10)
-            {
+            if (filteredcloud->points.size() > 0){
 
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
+            if (unsortedclusters.size() > 0){
+
             notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+
+            if (nonorientedclusters.size() > 0){
+
             clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
             if (clusters.size() > 5)
@@ -56,6 +60,8 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
                     segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
                 }
+
+                if (segmented_cloud->points.size() > 0){
 
                 std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
 
@@ -95,7 +101,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     outputcloud5 = ConvertCloudtoVector(segmented_cloud);
                 }
             }
-            }
+            }}}}
         }
 
         outputdata.input = ConvertCloudtoVector(cloudnew);
