@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
 //            // An error occurred.
 //            std::cerr << error.message() << std::endl;
 //          }
-           std::cout.write(readdata, len);
+//           std::cout.write(readdata.data(), len);
     }
   }
   catch (std::exception& e)
