@@ -1,13 +1,11 @@
 #include "pclviewer.h"
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
-#include "connection.hpp" // Must come before boost/serialization headers.
+//#include <boost/bind.hpp>
+//#include <boost/lexical_cast.hpp>
+//#include "connection.hpp" // Must come before boost/serialization headers.
 #include <boost/serialization/vector.hpp>
-#include <boost/thread.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 
 using namespace boost;
 using boost::asio::ip::tcp;
