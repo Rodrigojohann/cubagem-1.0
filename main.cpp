@@ -33,14 +33,12 @@ int main (int argc, char *argv[])
       {
         tcp::socket socket(io_service);
         acceptor.accept(socket);
-        std::vector<ObjectsData> sentdata;
 
         boost::asio::streambuf buf;
         std::ostream os(&buf);
         boost::archive::binary_oarchive oa(os);
 
         ObjectsData outputdata = w.Run(ip);
-        sentdata.push_back(outputdata);
 
         oa << outputdata;
 
