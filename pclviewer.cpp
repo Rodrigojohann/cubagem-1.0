@@ -43,12 +43,10 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.box4 = {};
         outputdata.box5 = {};
 
-
         return outputdata;
     }
     else
     {
-        outputdata.connection = "connection succeeded";
         for (size_t counter = 0; counter < 10; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
@@ -122,6 +120,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             }
         }
 
+        outputdata.connection = "connection succeeded";
         outputdata.input = ConvertCloudtoVector(cloudnew);
         outputdata.dimensions1.push_back(x1/10);
         outputdata.dimensions1.push_back(y1/10);
@@ -142,32 +141,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(x5/10);
         outputdata.dimensions5.push_back(y5/10);
         outputdata.dimensions5.push_back(z5/10);
-
-//        outputdata.dimensions1.push_back(10);
-//        outputdata.dimensions1.push_back(10);
-//        outputdata.dimensions1.push_back(10);
-
-//        outputdata.dimensions2.push_back(10);
-//        outputdata.dimensions2.push_back(10);
-//        outputdata.dimensions2.push_back(10);
-
-//        outputdata.dimensions3.push_back(10);
-//        outputdata.dimensions3.push_back(10);
-//        outputdata.dimensions3.push_back(10);
-
-//        outputdata.dimensions4.push_back(10);
-//        outputdata.dimensions4.push_back(10);
-//        outputdata.dimensions4.push_back(10);
-
-//        outputdata.dimensions5.push_back(10);
-//        outputdata.dimensions5.push_back(10);
-//        outputdata.dimensions5.push_back(10);
-
-//        outputdata.box1.push_back(0);
-//        outputdata.box2.push_back(0);
-//        outputdata.box3.push_back(0);
-//        outputdata.box4.push_back(0);
-//        outputdata.box5.push_back(0);
 
         outputdata.box1 = outputcloud1;
         outputdata.box2 = outputcloud2;
