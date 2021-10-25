@@ -16,7 +16,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     if (s.TestConnection(ipaddr, PORT) == false)
     {
         outputdata.connection = "connection failed";
-        outputdata.input = {};
         outputdata.dimensions1.push_back(0);
         outputdata.dimensions1.push_back(0);
         outputdata.dimensions1.push_back(0);
@@ -36,12 +35,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(0);
         outputdata.dimensions5.push_back(0);
         outputdata.dimensions5.push_back(0);
-
-        outputdata.box1 = {};
-        outputdata.box2 = {};
-        outputdata.box3 = {};
-        outputdata.box4 = {};
-        outputdata.box5 = {};
 
         return outputdata;
     }

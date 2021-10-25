@@ -6,9 +6,9 @@ using namespace std;
 PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
 {
 // var
-    CloudVector       			      pointCloud;
+    CloudVector                       pointCloud;
     boost::shared_ptr<VisionaryTData> pDataHandler;
-    PointCloudT::Ptr cloud_raw (new PointCloudT);
+    PointCloudT::Ptr                  cloud_raw (new PointCloudT);
 ////
     // Generate Visionary instance
     pDataHandler = boost::make_shared<VisionaryTData>();

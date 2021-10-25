@@ -53,12 +53,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pass_y.setFilterLimits(-0.4, 0.7);
     pass_y.filter(*inputcloud);
 
-//    pass_z.setInputCloud(inputcloud);
-//    pass_z.setFilterFieldName("z");
-//    pass_z.setFilterLimits(0, (CAMHEIGHT+0.2));
-//    pass_z.filter(*inputcloud);
-
-
     pass_z.setInputCloud(inputcloud);
     pass_z.setFilterFieldName("z");
     pass_z.setFilterLimits((CAMHEIGHT-0.12), (CAMHEIGHT+0.12));
