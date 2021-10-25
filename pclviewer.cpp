@@ -16,32 +16,32 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     if (s.TestConnection(ipaddr, PORT) == false)
     {
         outputdata.connection = "connection failed";
-        outputdata.input = ConvertCloudtoVector(cloudnew);
-        outputdata.dimensions1.push_back();
-        outputdata.dimensions1.push_back();
-        outputdata.dimensions1.push_back();
+        outputdata.input = {};
+        outputdata.dimensions1.push_back(0);
+        outputdata.dimensions1.push_back(0);
+        outputdata.dimensions1.push_back(0);
 
-        outputdata.dimensions2.push_back();
-        outputdata.dimensions2.push_back();
-        outputdata.dimensions2.push_back();
+        outputdata.dimensions2.push_back(0);
+        outputdata.dimensions2.push_back(0);
+        outputdata.dimensions2.push_back(0);
 
-        outputdata.dimensions3.push_back();
-        outputdata.dimensions3.push_back();
-        outputdata.dimensions3.push_back();
+        outputdata.dimensions3.push_back(0);
+        outputdata.dimensions3.push_back(0);
+        outputdata.dimensions3.push_back(0);
 
-        outputdata.dimensions4.push_back();
-        outputdata.dimensions4.push_back();
-        outputdata.dimensions4.push_back();
+        outputdata.dimensions4.push_back(0);
+        outputdata.dimensions4.push_back(0);
+        outputdata.dimensions4.push_back(0);
 
-        outputdata.dimensions5.push_back();
-        outputdata.dimensions5.push_back();
-        outputdata.dimensions5.push_back();
+        outputdata.dimensions5.push_back(0);
+        outputdata.dimensions5.push_back(0);
+        outputdata.dimensions5.push_back(0);
 
-        outputdata.box1.push_back();
-        outputdata.box2.push_back();
-        outputdata.box3.push_back();
-        outputdata.box4.push_back();
-        outputdata.box5.push_back();
+        outputdata.box1 = {};
+        outputdata.box2 = {};
+        outputdata.box3 = {};
+        outputdata.box4 = {};
+        outputdata.box5 = {};
 
 
         return outputdata;
