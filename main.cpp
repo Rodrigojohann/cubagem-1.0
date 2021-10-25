@@ -3,7 +3,6 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/binary_oarchive.hpp>
-#include "sensor.h"
 
 using namespace boost;
 using boost::asio::ip::tcp;
@@ -13,7 +12,7 @@ int main (int argc, char *argv[])
 /////
     char* ip = argv[1];
     PCLViewer w;
-//    Sensor s;
+    Sensor s;
 /////
 
     if (argc != 2)
