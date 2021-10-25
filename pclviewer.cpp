@@ -50,7 +50,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         for (size_t counter = 0; counter < 10; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
-
             cloudnew = s.CamStream(ipaddr, PORT);
 
             filteredcloud = c.FilterCloud(cloudnew);
@@ -66,7 +65,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
             {
                 limitcluster = clusters.size();
             }
-
 
             for (int number=0; number<limitcluster; ++number)
             {
@@ -87,35 +85,45 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                     x1 += dimensionX;
                     y1 += dimensionY;
                     z1 += dimensionZ;
-                    outputcloud1 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 9){
+                        outputcloud1 = ConvertCloudtoVector(segmented_cloud);
+                    }
                 }
                 else if (number == 1)
                 {
                     x2 += dimensionX;
                     y2 += dimensionY;
                     z2 += dimensionZ;
-                    outputcloud2 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 9){
+                        outputcloud2 = ConvertCloudtoVector(segmented_cloud);
+                    }
                 }
                 else if (number == 2)
                 {
                     x3 += dimensionX;
                     y3 += dimensionY;
                     z3 += dimensionZ;
-                    outputcloud3 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 9){
+                        outputcloud3 = ConvertCloudtoVector(segmented_cloud);
+                    }
                 }
                 else if (number == 3)
                 {
                     x4 += dimensionX;
                     y4 += dimensionY;
                     z4 += dimensionZ;
-                    outputcloud4 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 9){
+                        outputcloud4 = ConvertCloudtoVector(segmented_cloud);
+                    }
                 }
                 else if (number == 4)
                 {
                     x5 += dimensionX;
                     y5 += dimensionY;
                     z5 += dimensionZ;
-                    outputcloud5 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 9){
+                        outputcloud5 = ConvertCloudtoVector(segmented_cloud);
+                    }
                 }
             }
         }
