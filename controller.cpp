@@ -53,10 +53,10 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pass_y.setFilterLimits(-0.4, 0.7);
     pass_y.filter(*inputcloud);
 
-    pass_z.setInputCloud(inputcloud);
-    pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits(0, (CAMHEIGHT+0.2));
-    pass_z.filter(*inputcloud);
+//    pass_z.setInputCloud(inputcloud);
+//    pass_z.setFilterFieldName("z");
+//    pass_z.setFilterLimits(0, (CAMHEIGHT+0.2));
+//    pass_z.filter(*inputcloud);
 
 
     pass_z.setInputCloud(inputcloud);
@@ -73,7 +73,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         seg.setInputCloud (outputcloud);
         seg.segment (*inliers, *coefficients);
 
-
         outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
         outputcloud1->points.resize(inliers->indices.size());
 
@@ -88,7 +87,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         p.setTargetCloud (outputcloud1);
         p.setDistanceThreshold (0.001);
         p.segment(*outputcloud1);
-
 
         mls.setComputeNormals (true);
         mls.setInputCloud (outputcloud1);
@@ -113,8 +111,8 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
 std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
 {
 // var
-    pcl::search::Search<pcl::PointXYZ>::Ptr 	   tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    std::vector <pcl::PointIndices> 			   clusters;
+    pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
+    std::vector <pcl::PointIndices>                clusters;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
     if (inputcloud->points.size() > 10){
@@ -223,28 +221,5 @@ std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inpu
         }
     }
     return selectedclusters;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::SurfaceArea(PointCloudT::Ptr inputcloud)
-{
-// var
-    double                              hullarea;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_hull;
-    pcl::ConcaveHull<pcl::PointXYZ>     chull;
-////
-    cloud_hull.reset(new pcl::PointCloud<pcl::PointXYZ>);
-    chull.setInputCloud (inputcloud);
-    chull.setDimension(2);
-    chull.setAlpha (0.1);
-    chull.reconstruct (*cloud_hull);
-
-    hullarea = 0.0;
-    for (size_t i=0; i<(cloud_hull->points.size() - 1); ++i)
-    {
-        hullarea += (((*cloud_hull)[i].y + (*cloud_hull)[i+1].y)*((*cloud_hull)[i].x - (*cloud_hull)[i+1].x));
-    }
-    hullarea=0.5*abs(hullarea);
-
-    return hullarea;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

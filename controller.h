@@ -22,5 +22,4 @@ public:
     std::tuple<double, double, double>              CalculateDimensions(PointCloudT::Ptr inputcloud);
     bool                                            NormalOrientation (PointCloudT::Ptr inputcloud, pcl::PointIndices inputcluster);
     std::vector <pcl::PointIndices>                 RemoveInclined(PointCloudT::Ptr inputcloud, std::vector<pcl::PointIndices> inputclusters);
-    double                                          SurfaceArea(PointCloudT::Ptr inputcloud);
 };
