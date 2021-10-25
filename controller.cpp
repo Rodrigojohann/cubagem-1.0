@@ -69,41 +69,42 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setDistanceThreshold (0.2);
 
-    if (outputcloud->points.size()> 0 ){
-    seg.setInputCloud (outputcloud);
-    seg.segment (*inliers, *coefficients);
-    }
-
-    outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
-    outputcloud1->points.resize(inliers->indices.size());
-
-    for(size_t i=0; i<inliers->indices.size(); ++i)
-    {
-        outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
-        outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
-        outputcloud1->points[i].z = (*outputcloud)[inliers->indices[i]].z;
-    }
-
-    p.setInputCloud (inputcloud);
-    p.setTargetCloud (outputcloud1);
-    p.setDistanceThreshold (0.001);
-    p.segment(*outputcloud1);
+    if (outputcloud->points.size()> 10){
+        seg.setInputCloud (outputcloud);
+        seg.segment (*inliers, *coefficients);
 
 
-    mls.setComputeNormals (true);
-    mls.setInputCloud (outputcloud1);
-    mls.setPolynomialOrder (2);
-    mls.setSearchMethod (tree);
-    mls.setSearchRadius (0.05);
-    mls.process (mls_points);
+        outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
+        outputcloud1->points.resize(inliers->indices.size());
 
-    outputcloud2->points.resize(mls_points.size());
+        for(size_t i=0; i<inliers->indices.size(); ++i)
+        {
+            outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
+            outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
+            outputcloud1->points[i].z = (*outputcloud)[inliers->indices[i]].z;
+        }
 
-    for(size_t i=0; i<outputcloud2->points.size(); ++i)
-    {
-        outputcloud2->points[i].x = (mls_points)[i].x;
-        outputcloud2->points[i].y = (mls_points)[i].y;
-        outputcloud2->points[i].z = (mls_points)[i].z;
+        p.setInputCloud (inputcloud);
+        p.setTargetCloud (outputcloud1);
+        p.setDistanceThreshold (0.001);
+        p.segment(*outputcloud1);
+
+
+        mls.setComputeNormals (true);
+        mls.setInputCloud (outputcloud1);
+        mls.setPolynomialOrder (2);
+        mls.setSearchMethod (tree);
+        mls.setSearchRadius (0.05);
+        mls.process (mls_points);
+
+        outputcloud2->points.resize(mls_points.size());
+
+        for(size_t i=0; i<outputcloud2->points.size(); ++i)
+        {
+            outputcloud2->points[i].x = (mls_points)[i].x;
+            outputcloud2->points[i].y = (mls_points)[i].y;
+            outputcloud2->points[i].z = (mls_points)[i].z;
+        }
     }
 
     return outputcloud2;
@@ -116,6 +117,7 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     std::vector <pcl::PointIndices> 			   clusters;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
+    if (inputcloud->points.size() > 10){
     tree->setInputCloud (inputcloud);
     ec.setClusterTolerance (0.015);
     ec.setMinClusterSize (100);
@@ -123,6 +125,7 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     ec.setSearchMethod (tree);
     ec.setInputCloud (inputcloud);
     ec.extract (clusters);
+    }
 
     return std::make_tuple(clusters, clusters.size());
 }
