@@ -10,6 +10,7 @@ using boost::asio::ip::tcp;
 
 struct ObjectsData {
 
+    std::string connection;
     std::vector<short> input;
     std::vector<double> dimensions1;
     std::vector<short> box1;
@@ -23,6 +24,7 @@ struct ObjectsData {
     std::vector<short> box5;
 
     template<typename archive> void serialize(archive& ar, const unsigned /*version*/) {
+        ar & connection;
         ar & input;
         ar & dimensions1;
         ar & box1;
@@ -71,6 +73,7 @@ int main(int argc, char* argv[])
 
         ia >> readdata;
 
+        std::cout << "  Connection: " << readdata.connection << "\n";
         std::cout << "  Input cloud size: " << readdata.input.size() << "\n";
         std::cout << "  Object 1 cloud size: " << readdata.box1.size() << "\n";
         std::cout << "  Object 1 dimensions: X: " << readdata.dimensions1[0] << "; Y: " << readdata.dimensions1[1] << "; Z: " << readdata.dimensions1[2] << "\n";

@@ -4,21 +4,23 @@ using namespace std;
 
 //string PCLViewer::Run(char* ipaddr){
 ObjectsData PCLViewer::Run(char* ipaddr){
-////////
+// var
     Controller c;
     Sensor s;
     ObjectsData outputdata;
-
+////
     x1 = x2 = x3 = x4 = x5 = 0.0;
     y1 = y2 = y3 = y4 = y5 = 0.0;
     z1 = z2 = z3 = z4 = z5 = 0.0;
 
     if (s.TestConnection(ipaddr, PORT) == false)
     {
+        outputdata.connection = "connection failed";
         return outputdata;
     }
     else
     {
+        outputdata.connection = "connection succeeded";
         for (size_t counter = 0; counter < 10; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);

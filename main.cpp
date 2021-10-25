@@ -21,12 +21,6 @@ int main (int argc, char *argv[])
       return 1;
     }
 
-    if (s.TestConnection(ip, PORT) == false)
-    {
-        std::cerr << "Could not connect to camera" << std::endl;
-        return 1;
-    }
-
     try
     {
       boost::asio::io_service io_service;

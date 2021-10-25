@@ -23,6 +23,7 @@ typedef std::vector<PointXYZ> CloudVector;
 
 struct ObjectsData {
 
+    std::string connection;
     std::vector<short> input;
     std::vector<double> dimensions1;
     std::vector<short> box1;
@@ -36,6 +37,7 @@ struct ObjectsData {
     std::vector<short> box5;
 
     template<typename archive> void serialize(archive& ar, const unsigned /*version*/) {
+        ar & connection;
         ar & input;
         ar & dimensions1;
         ar & box1;
