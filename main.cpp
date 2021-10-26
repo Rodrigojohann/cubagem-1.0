@@ -31,19 +31,23 @@ int main (int argc, char *argv[])
 
       for (;;)
       {
-        tcp::socket socket(io_service);
-        acceptor.accept(socket);
+          tcp::socket socket(io_service);
+          acceptor.accept(socket);
 
-        boost::asio::streambuf buf;
-        std::ostream os(&buf);
-        boost::archive::binary_oarchive oa(os);
+          ObjectsData outputdata = w.Run(ip);
 
-        ObjectsData outputdata = w.Run(ip);
+          boost::asio::streambuf buf;
+          std::ostream os(&buf);
+          boost::archive::text_oarchive oa(os);
+          oa & outputdata;
 
-        oa << outputdata;
+          const size_t header = buf.size();
+          std::vector<boost::asio::const_buffer> buffers;
+          buffers.push_back(buf.data());
 
-        boost::system::error_code ignored_error;
-        boost::asio::write (socket, buf, ignored_error);
+          const size_t rc = boost::asio::write(socket, buffers);
+          std::cout << "wrote " << rc << " bytes" << std::endl;
+
       }
     }
     catch (std::exception& e)

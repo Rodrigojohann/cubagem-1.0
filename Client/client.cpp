@@ -5,6 +5,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <../objectsdata.h>
 
 using boost::asio::ip::tcp;
@@ -35,9 +36,10 @@ int main(int argc, char* argv[])
         boost::system::error_code error;
 
         std::size_t length = boost::asio::read(socket, buf, error);
+        std::cout << "read " << length << " bytes" << std::endl;
 
         std::istream is(&buf);
-        boost::archive::binary_iarchive ia(is);
+        boost::archive::text_iarchive ia(is);
 
         ia >> readdata;
 
