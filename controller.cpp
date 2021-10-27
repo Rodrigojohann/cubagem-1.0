@@ -1,4 +1,5 @@
 #include "controller.h"
+#include <time.h>
 
 using namespace std;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
@@ -11,14 +12,14 @@ std::vector <pcl::PointIndices> Controller::SortClusters(std::vector <pcl::Point
 
     sortedclusters = inputclusters;
 
-    for (int i=1 ; i<size; i++)
+    for (int i=1 ; i < size; ++i)
     {
         temp = inputclusters[i];
         int j = i - 1;
         while (j >= 0 && temp.indices.size() > sortedclusters[j].indices.size())
         {
             sortedclusters[j+1] = inputclusters[j];
-            j--;
+            --j;
         }
         sortedclusters[j+1] = temp;
     }
@@ -63,14 +64,14 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setDistanceThreshold (0.2);
 
-    if (outputcloud->points.size()> 10){
+     if (outputcloud->points.size() > 10){
         seg.setInputCloud (outputcloud);
         seg.segment (*inliers, *coefficients);
 
         outputcloud1.reset(new pcl::PointCloud<pcl::PointXYZ>);
         outputcloud1->points.resize(inliers->indices.size());
 
-        for(size_t i=0; i<inliers->indices.size(); ++i)
+        for(size_t i=0; i < inliers->indices.size(); ++i)
         {
             outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
             outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
@@ -81,25 +82,23 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         p.setTargetCloud (outputcloud1);
         p.setDistanceThreshold (0.001);
         p.segment(*outputcloud1);
+//        mls.setComputeNormals (true);
+//        mls.setInputCloud (outputcloud1);
+//        mls.setPolynomialOrder (2);
+//        mls.setSearchMethod (tree);
+//        mls.setSearchRadius (0.05);
+//        mls.process (mls_points);
 
-        mls.setComputeNormals (true);
-        mls.setInputCloud (outputcloud1);
-        mls.setPolynomialOrder (2);
-        mls.setSearchMethod (tree);
-        mls.setSearchRadius (0.05);
-        mls.process (mls_points);
+//        outputcloud2->points.resize(mls_points.size());
 
-        outputcloud2->points.resize(mls_points.size());
-
-        for(size_t i=0; i<outputcloud2->points.size(); ++i)
-        {
-            outputcloud2->points[i].x = (mls_points)[i].x;
-            outputcloud2->points[i].y = (mls_points)[i].y;
-            outputcloud2->points[i].z = (mls_points)[i].z;
-        }
+//        for(size_t i=0; i<outputcloud2->points.size(); ++i)
+//        {
+//            outputcloud2->points[i].x = (mls_points)[i].x;
+//            outputcloud2->points[i].y = (mls_points)[i].y;
+//            outputcloud2->points[i].z = (mls_points)[i].z;
+//        }
     }
-
-    return outputcloud2;
+    return outputcloud1;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
@@ -108,6 +107,7 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
     std::vector <pcl::PointIndices>                clusters;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+//clock_t start, end;
 ////
     if (inputcloud->points.size() > 10){
     tree->setInputCloud (inputcloud);
@@ -116,9 +116,11 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     ec.setMaxClusterSize (25000);
     ec.setSearchMethod (tree);
     ec.setInputCloud (inputcloud);
+//start = clock();
     ec.extract (clusters);
     }
-
+//end = clock();
+//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
     return std::make_tuple(clusters, clusters.size());
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,16 +128,18 @@ std::tuple<double, double, double> Controller::CalculateDimensions(PointCloudT::
 {
 // var
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
-    pcl::PointXYZ                        	   minPt;
+    pcl::PointXYZ                                  minPt;
     pcl::PointXYZ                                  maxPt;
     double                                         min_z;
-    pcl::PointXYZ 				   min_point_OBB;
-    pcl::PointXYZ				   max_point_OBB;
-    pcl::PointXYZ 				   position_OBB;
-    Eigen::Matrix3f 				   rotational_matrix_OBB;
+    pcl::PointXYZ                                  min_point_OBB;
+    pcl::PointXYZ                                  max_point_OBB;
+    pcl::PointXYZ                                  position_OBB;
+    Eigen::Matrix3f                                rotational_matrix_OBB;
     double                                         dimensionX, dimensionY, dimensionZ;
-    pcl::PassThrough<pcl::PointXYZ> 		   passz;
+    pcl::PassThrough<pcl::PointXYZ>                passz;
+//clock_t start, end;
 ////
+//start = clock();
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
     min_z = minPt.z;
 
@@ -152,7 +156,8 @@ std::tuple<double, double, double> Controller::CalculateDimensions(PointCloudT::
     dimensionX = (max_point_OBB.x - min_point_OBB.x);
     dimensionY = (max_point_OBB.y - min_point_OBB.y);
     dimensionZ = (CAMHEIGHT - min_z);
-
+//end = clock();
+//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +171,9 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     double                                            normal_x_mean;
     double                                            normal_y_mean;
     double                                            tolerance = 0.25;
+//clock_t start, end;
 ////
+
     segmented_cloud->points.resize(inputcluster.indices.size());
     for(size_t i=0; i<inputcluster.indices.size(); ++i)
     {
@@ -174,12 +181,12 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
         segmented_cloud->points[i].y = (*inputcloud)[inputcluster.indices[i]].y;
         segmented_cloud->points[i].z = (*inputcloud)[inputcluster.indices[i]].z;
     }
-
+//start = clock();
     ne.setInputCloud(segmented_cloud);
     ne.setSearchMethod (tree);
     ne.setKSearch (5);
     ne.compute(*normals);
-
+//end = clock();
     normal_x_mean = 0.0;
     normal_y_mean = 0.0;
 
@@ -191,7 +198,8 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
 
     normal_x_mean = normal_x_mean/normals->size();
     normal_y_mean = normal_y_mean/normals->size();
-
+//end = clock();
+//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
     if (normal_x_mean < tolerance && normal_x_mean > (-tolerance) && normal_y_mean < tolerance && normal_y_mean > (-tolerance))
     {
         return true;
@@ -206,13 +214,20 @@ std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inpu
 {
 // var
     std::vector <pcl::PointIndices> selectedclusters;
+    bool IsNormal;
+//clock_t start, end;
 ////
-    for (int i=0; i<inputclusters.size(); i++)
+    for (int i=0; i<inputclusters.size(); ++i)
     {
-        if (NormalOrientation(inputcloud, inputclusters[i]) == true)
+//start = clock();
+        IsNormal = NormalOrientation(inputcloud, inputclusters[i]);
+        if (IsNormal == true)
+//end = clock();
         {
             selectedclusters.push_back(inputclusters[i]);
         }
+
+//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
     }
     return selectedclusters;
 }

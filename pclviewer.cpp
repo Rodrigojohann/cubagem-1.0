@@ -1,4 +1,5 @@
 ﻿#include "pclviewer.h"
+#include <time.h>
 
 using namespace std;
 
@@ -8,6 +9,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     Controller c;
     Sensor s;
     ObjectsData outputdata;
+    clock_t start, end;
 ////
     x1 = x2 = x3 = x4 = x5 = 0.0;
     y1 = y2 = y3 = y4 = y5 = 0.0;
@@ -40,21 +42,23 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     }
     else
     {
-        for (size_t counter = 0; counter < 10; ++counter)
+        for (size_t counter = 0; counter < 3; ++counter)
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             cloudnew = s.CamStream(ipaddr, PORT);
 
             filteredcloud = c.FilterCloud(cloudnew);
+
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
             notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
+
             clusters = c.RemoveInclined(filteredcloud, notorientedclusters);
 
             if (clusters.size() > 5)
             {
                 limitcluster = 5;
             }
-            else
+           else
             {
                 limitcluster = clusters.size();
             }
@@ -72,53 +76,52 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                 }
 
                 std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
-
-                if (number == 0)
-                {
+//start = clock();
+                switch (number){
+                  case 0:
                     x1 += dimensionX;
                     y1 += dimensionY;
                     z1 += dimensionZ;
-                    if (counter == 9){
-                        outputcloud1 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 2){
+                        outputdata.box1 = ConvertCloudtoVector(segmented_cloud);
                     }
-                }
-                else if (number == 1)
-                {
+                    break;
+                  case 1:
                     x2 += dimensionX;
                     y2 += dimensionY;
                     z2 += dimensionZ;
-                    if (counter == 9){
-                        outputcloud2 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 2){
+                        outputdata.box2 = ConvertCloudtoVector(segmented_cloud);
                     }
-                }
-                else if (number == 2)
-                {
+                    break;
+                  case 2:
                     x3 += dimensionX;
                     y3 += dimensionY;
                     z3 += dimensionZ;
-                    if (counter == 9){
-                        outputcloud3 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 2){
+                        outputdata.box3 = ConvertCloudtoVector(segmented_cloud);
                     }
-                }
-                else if (number == 3)
-                {
+                    break;
+                  case 3:
                     x4 += dimensionX;
                     y4 += dimensionY;
                     z4 += dimensionZ;
-                    if (counter == 9){
-                        outputcloud4 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 2){
+                        outputdata.box4 = ConvertCloudtoVector(segmented_cloud);
                     }
-                }
-                else if (number == 4)
-                {
+                    break;
+                  case 4:
                     x5 += dimensionX;
                     y5 += dimensionY;
                     z5 += dimensionZ;
-                    if (counter == 9){
-                        outputcloud5 = ConvertCloudtoVector(segmented_cloud);
+                    if (counter == 2){
+                        outputdata.box5 = ConvertCloudtoVector(segmented_cloud);
                     }
-                }
+                    break;
+                  }
             }
+//end = clock();
+//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
         }
 
         outputdata.connection = "connection succeeded";
@@ -143,11 +146,11 @@ ObjectsData PCLViewer::Run(char* ipaddr){
         outputdata.dimensions5.push_back(y5/10);
         outputdata.dimensions5.push_back(z5/10);
 
-        outputdata.box1 = outputcloud1;
-        outputdata.box2 = outputcloud2;
-        outputdata.box3 = outputcloud3;
-        outputdata.box4 = outputcloud4;
-        outputdata.box5 = outputcloud5;
+//        outputdata.box1 = outputcloud1;
+//        outputdata.box2 = outputcloud2;
+//        outputdata.box3 = outputcloud3;
+//        outputdata.box4 = outputcloud4;
+//        outputdata.box5 = outputcloud5;
 
         return outputdata;
     }
@@ -170,7 +173,6 @@ std::vector<short> PCLViewer::ConvertCloudtoVector(pcl::PointCloud<pcl::PointXYZ
 
          ++j;
      }
-
      return points;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

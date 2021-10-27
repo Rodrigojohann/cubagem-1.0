@@ -47,7 +47,6 @@ int main (int argc, char *argv[])
 
           const size_t rc = boost::asio::write(socket, buffers);
           std::cout << "wrote " << rc << " bytes" << std::endl;
-
       }
     }
     catch (std::exception& e)
