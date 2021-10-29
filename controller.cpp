@@ -1,5 +1,4 @@
 #include "controller.h"
-#include <time.h>
 
 using namespace std;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
@@ -42,8 +41,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::SegmentDifferences<pcl::PointXYZ>                   p;
     pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
-    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
-clock_t start, end;
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
@@ -109,7 +107,6 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     pcl::search::Search<pcl::PointXYZ>::Ptr        tree (new pcl::search::KdTree<pcl::PointXYZ>);
     std::vector <pcl::PointIndices>                clusters;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-//clock_t start, end;
 ////
     if (inputcloud->points.size() > 10){
     tree->setInputCloud (inputcloud);
@@ -118,11 +115,9 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     ec.setMaxClusterSize (25000);
     ec.setSearchMethod (tree);
     ec.setInputCloud (inputcloud);
-//start = clock();
     ec.extract (clusters);
     }
-//end = clock();
-//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
+
     return std::make_tuple(clusters, clusters.size());
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,16 +127,14 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
     pcl::PointXYZ                                  minPt;
     pcl::PointXYZ                                  maxPt;
-    float                                         min_z;
+    float                                          min_z;
     pcl::PointXYZ                                  min_point_OBB;
     pcl::PointXYZ                                  max_point_OBB;
     pcl::PointXYZ                                  position_OBB;
     Eigen::Matrix3f                                rotational_matrix_OBB;
-    float                                         dimensionX, dimensionY, dimensionZ;
+    float                                          dimensionX, dimensionY, dimensionZ;
     pcl::PassThrough<pcl::PointXYZ>                passz;
-//clock_t start, end;
 ////
-//start = clock();
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
     min_z = minPt.z;
 
@@ -149,17 +142,15 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     passz.setFilterFieldName ("z");
     passz.setFilterLimits ((min_z-0.1), (min_z+0.1));
     passz.filter(*inputcloud);
-//start = clock();
     feature_extractor.setInputCloud(inputcloud);
     feature_extractor.compute();
 
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-//end = clock();
+
     dimensionX = (max_point_OBB.x - min_point_OBB.x);
     dimensionY = (max_point_OBB.y - min_point_OBB.y);
     dimensionZ = (CAMHEIGHT - min_z);
-//end = clock();
-//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
+
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,10 +161,9 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
     pcl::search::KdTree<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>());
     PointCloudT::Ptr                                  segmented_cloud (new PointCloudT);
-    float                                            normal_x_mean;
-    float                                            normal_y_mean;
-    float                                            tolerance = 0.25;
-//clock_t start, end;
+    float                                             normal_x_mean;
+    float                                             normal_y_mean;
+    float                                             tolerance = 0.25;
 ////
 
     segmented_cloud->points.resize(inputcluster.indices.size());
@@ -183,12 +173,12 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
         segmented_cloud->points[i].y = (*inputcloud)[inputcluster.indices[i]].y;
         segmented_cloud->points[i].z = (*inputcloud)[inputcluster.indices[i]].z;
     }
-//start = clock();
+
     ne.setInputCloud(segmented_cloud);
     ne.setSearchMethod (tree);
     ne.setKSearch (5);
     ne.compute(*normals);
-//end = clock();
+
     normal_x_mean = 0.0;
     normal_y_mean = 0.0;
 
@@ -200,8 +190,7 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
 
     normal_x_mean = normal_x_mean/normals->size();
     normal_y_mean = normal_y_mean/normals->size();
-//end = clock();
-//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
+
     if (normal_x_mean < tolerance && normal_x_mean > (-tolerance) && normal_y_mean < tolerance && normal_y_mean > (-tolerance))
     {
         return true;
@@ -217,19 +206,14 @@ std::vector <pcl::PointIndices> Controller::RemoveInclined(PointCloudT::Ptr inpu
 // var
     std::vector <pcl::PointIndices> selectedclusters;
     bool IsNormal;
-//clock_t start, end;
 ////
     for (int i=0; i<inputclusters.size(); ++i)
     {
-//start = clock();
         IsNormal = NormalOrientation(inputcloud, inputclusters[i]);
         if (IsNormal == true)
-//end = clock();
         {
             selectedclusters.push_back(inputclusters[i]);
         }
-
-//cout << "time: " << double(end-start)/CLOCKS_PER_SEC << " seconds\n";
     }
     return selectedclusters;
 }
