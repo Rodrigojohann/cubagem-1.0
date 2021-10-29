@@ -68,7 +68,7 @@ ObjectsData PCLViewer::Run(char* ipaddr){
                 segmented_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
                 segmented_cloud->points.resize(clusters[number].indices.size());
 
-                for(size_t i=0; i<clusters[number].indices.size(); ++i)
+                for(size_t i=0; i < clusters[number].indices.size(); ++i)
                 {
                     segmented_cloud->points[i].x = (*filteredcloud)[clusters[number].indices[i]].x;
                     segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;

@@ -12,7 +12,7 @@ std::vector <pcl::PointIndices> Controller::SortClusters(std::vector <pcl::Point
 
     sortedclusters = inputclusters;
 
-    for (int i=1 ; i < size; ++i)
+    for (size_t i=1 ; i < size; ++i)
     {
         temp = inputclusters[i];
         int j = i - 1;
@@ -43,6 +43,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
+clock_t start, end;
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
@@ -82,6 +83,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         p.setTargetCloud (outputcloud1);
         p.setDistanceThreshold (0.001);
         p.segment(*outputcloud1);
+
 //        mls.setComputeNormals (true);
 //        mls.setInputCloud (outputcloud1);
 //        mls.setPolynomialOrder (2);
@@ -124,18 +126,18 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     return std::make_tuple(clusters, clusters.size());
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<double, double, double> Controller::CalculateDimensions(PointCloudT::Ptr inputcloud)
+std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
     pcl::PointXYZ                                  minPt;
     pcl::PointXYZ                                  maxPt;
-    double                                         min_z;
+    float                                         min_z;
     pcl::PointXYZ                                  min_point_OBB;
     pcl::PointXYZ                                  max_point_OBB;
     pcl::PointXYZ                                  position_OBB;
     Eigen::Matrix3f                                rotational_matrix_OBB;
-    double                                         dimensionX, dimensionY, dimensionZ;
+    float                                         dimensionX, dimensionY, dimensionZ;
     pcl::PassThrough<pcl::PointXYZ>                passz;
 //clock_t start, end;
 ////
@@ -147,12 +149,12 @@ std::tuple<double, double, double> Controller::CalculateDimensions(PointCloudT::
     passz.setFilterFieldName ("z");
     passz.setFilterLimits ((min_z-0.1), (min_z+0.1));
     passz.filter(*inputcloud);
-
+//start = clock();
     feature_extractor.setInputCloud(inputcloud);
     feature_extractor.compute();
 
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-
+//end = clock();
     dimensionX = (max_point_OBB.x - min_point_OBB.x);
     dimensionY = (max_point_OBB.y - min_point_OBB.y);
     dimensionZ = (CAMHEIGHT - min_z);
@@ -168,9 +170,9 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
     pcl::search::KdTree<pcl::PointXYZ>::Ptr           tree (new pcl::search::KdTree<pcl::PointXYZ>());
     PointCloudT::Ptr                                  segmented_cloud (new PointCloudT);
-    double                                            normal_x_mean;
-    double                                            normal_y_mean;
-    double                                            tolerance = 0.25;
+    float                                            normal_x_mean;
+    float                                            normal_y_mean;
+    float                                            tolerance = 0.25;
 //clock_t start, end;
 ////
 
@@ -190,7 +192,7 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     normal_x_mean = 0.0;
     normal_y_mean = 0.0;
 
-    for (int i=0; i < normals->size(); ++i)
+    for (size_t i=0; i < normals->size(); ++i)
     {
         normal_x_mean += (*normals)[i].normal_x;
         normal_y_mean += (*normals)[i].normal_y;

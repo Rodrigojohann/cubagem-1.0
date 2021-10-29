@@ -32,10 +32,10 @@ class PCLViewer
     std::vector<pcl::PointIndices>          notorientedclusters;
     std::vector<pcl::PointIndices>          clusters;
     int                                     clustersize;
-    double                                  dimensionX, dimensionY, dimensionZ;
-    double                                  x1, x2, x3, x4, x5;
-    double                                  y1, y2, y3, y4, y5;
-    double                                  z1, z2, z3, z4, z5;
+    float                                  dimensionX, dimensionY, dimensionZ;
+    float                                  x1, x2, x3, x4, x5;
+    float                                  y1, y2, y3, y4, y5;
+    float                                  z1, z2, z3, z4, z5;
     int                                     limitcluster;
     int                                     clusternumber;
     std::vector<short>                      outputcloud1, outputcloud2, outputcloud3, outputcloud4, outputcloud5;
