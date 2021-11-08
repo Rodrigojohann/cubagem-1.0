@@ -5,3 +5,4 @@ COPY . /home/cubagem-1.0/Client
 WORKDIR /home/cubagem-1.0/Client
 EXPOSE 13
 #CMD ./cubagem-gui 192.168.140.2
+CMD ["/bin/bash"]
