@@ -41,7 +41,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     pcl::SegmentDifferences<pcl::PointXYZ>                   p;
     pcl::search::KdTree<pcl::PointXYZ>::Ptr                  tree (new pcl::search::KdTree<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointNormal>                        mls_points;
-    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
