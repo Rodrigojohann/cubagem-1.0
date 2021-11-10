@@ -3,6 +3,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include <time.h>
 
 using namespace boost;
 using boost::asio::ip::tcp;
@@ -14,7 +15,6 @@ int main (int argc, char *argv[])
     PCLViewer w;
     Sensor s;
 /////
-
     if (argc != 2)
     {
       std::cerr << "Usage: insert camera ip" << std::endl;
@@ -31,6 +31,7 @@ int main (int argc, char *argv[])
 
       for (;;)
       {
+;
           tcp::socket socket(io_service);
           acceptor.accept(socket);
 

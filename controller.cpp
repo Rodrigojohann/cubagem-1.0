@@ -1,4 +1,5 @@
 #include "controller.h"
+#include <time.h>
 
 using namespace std;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
@@ -82,23 +83,23 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         p.setDistanceThreshold (0.001);
         p.segment(*outputcloud1);
 
-//        mls.setComputeNormals (true);
-//        mls.setInputCloud (outputcloud1);
-//        mls.setPolynomialOrder (2);
-//        mls.setSearchMethod (tree);
-//        mls.setSearchRadius (0.05);
-//        mls.process (mls_points);
+        mls.setComputeNormals (true);
+        mls.setInputCloud (outputcloud1);
+        mls.setPolynomialOrder (2);
+        mls.setSearchMethod (tree);
+        mls.setSearchRadius (0.05);
+        mls.process (mls_points);
 
-//        outputcloud2->points.resize(mls_points.size());
+        outputcloud2->points.resize(mls_points.size());
 
-//        for(size_t i=0; i<outputcloud2->points.size(); ++i)
-//        {
-//            outputcloud2->points[i].x = (mls_points)[i].x;
-//            outputcloud2->points[i].y = (mls_points)[i].y;
-//            outputcloud2->points[i].z = (mls_points)[i].z;
-//        }
+        for(size_t i=0; i<outputcloud2->points.size(); ++i)
+        {
+            outputcloud2->points[i].x = (mls_points)[i].x;
+            outputcloud2->points[i].y = (mls_points)[i].y;
+            outputcloud2->points[i].z = (mls_points)[i].z;
+        }
     }
-    return outputcloud1;
+    return outputcloud2;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(PointCloudT::Ptr inputcloud)
@@ -127,30 +128,30 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
     pcl::PointXYZ                                  minPt;
     pcl::PointXYZ                                  maxPt;
-    float                                          min_z;
     pcl::PointXYZ                                  min_point_OBB;
     pcl::PointXYZ                                  max_point_OBB;
     pcl::PointXYZ                                  position_OBB;
     Eigen::Matrix3f                                rotational_matrix_OBB;
     float                                          dimensionX, dimensionY, dimensionZ;
     pcl::PassThrough<pcl::PointXYZ>                passz;
+clock_t start, end;
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
-    min_z = minPt.z;
 
     passz.setInputCloud(inputcloud);
     passz.setFilterFieldName ("z");
-    passz.setFilterLimits ((min_z-0.1), (min_z+0.1));
+    passz.setFilterLimits ((minPt.z-0.1), (minPt.z+0.1));
     passz.filter(*inputcloud);
+
     feature_extractor.setInputCloud(inputcloud);
     feature_extractor.compute();
-
     feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
     dimensionX = (max_point_OBB.x - min_point_OBB.x);
     dimensionY = (max_point_OBB.y - min_point_OBB.y);
-    dimensionZ = (CAMHEIGHT - min_z);
+    dimensionZ = (CAMHEIGHT - minPt.z);
 
+cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +166,6 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     float                                             normal_y_mean;
     float                                             tolerance = 0.25;
 ////
-
     segmented_cloud->points.resize(inputcluster.indices.size());
     for(size_t i=0; i<inputcluster.indices.size(); ++i)
     {
