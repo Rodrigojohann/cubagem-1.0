@@ -16,6 +16,7 @@ clock_t start, end;
 
     if (s.TestConnection(ipaddr, PORT) == false)
     {
+
         outputdata.connection = "connection failed";
         outputdata.dimensions1.push_back(0);
         outputdata.dimensions1.push_back(0);
@@ -45,8 +46,9 @@ clock_t start, end;
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             cloudnew = s.CamStream(ipaddr, PORT);
+start = clock();
             filteredcloud = c.FilterCloud(cloudnew);
-
+end = clock();
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
             notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
@@ -73,9 +75,9 @@ clock_t start, end;
                     segmented_cloud->points[i].y = (*filteredcloud)[clusters[number].indices[i]].y;
                     segmented_cloud->points[i].z = (*filteredcloud)[clusters[number].indices[i]].z;
                 }
-start = clock();
+
                 std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(segmented_cloud);
-end = clock();
+
                 switch (number){
                   case 0:
                     x1 += dimensionX;
@@ -118,7 +120,9 @@ end = clock();
                     }
                     break;
                   }
+//cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
             }
+//start = clock();
 //cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
         }
 
@@ -144,12 +148,8 @@ end = clock();
         outputdata.dimensions5.push_back(y5/Nsamples);
         outputdata.dimensions5.push_back(z5/Nsamples);
 
-//        outputdata.box1 = outputcloud1;
-//        outputdata.box2 = outputcloud2;
-//        outputdata.box3 = outputcloud3;
-//        outputdata.box4 = outputcloud4;
-//        outputdata.box5 = outputcloud5;
-
+//end = clock();
+//cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
         return outputdata;
     }
 }

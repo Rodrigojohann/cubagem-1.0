@@ -9,7 +9,11 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/surface/mls.h>
 #include <pcl/surface/concave_hull.h>
-#define  CAMHEIGHT 2.21
+#define  CAMHEIGHT 2.2
+#define  X_MIN 0.65
+#define  X_MAX 0.65
+#define  Y_MIN 0.4
+#define  Y_MAX 0.7
 
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 

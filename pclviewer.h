@@ -39,5 +39,5 @@ class PCLViewer
     int                                     limitcluster;
     int                                     clusternumber;
     std::vector<short>                      outputcloud1, outputcloud2, outputcloud3, outputcloud4, outputcloud5;
-    int                                    Nsamples = 5;
+    int                                    Nsamples = 3;
 };

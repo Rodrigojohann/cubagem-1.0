@@ -46,12 +46,12 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
 ////
     pass_x.setInputCloud(inputcloud);
     pass_x.setFilterFieldName("x");
-    pass_x.setFilterLimits(-0.65, 0.55);
+    pass_x.setFilterLimits(-X_MIN, X_MAX);;
     pass_x.filter(*inputcloud);
 
     pass_y.setInputCloud(inputcloud);
     pass_y.setFilterFieldName("y");
-    pass_y.setFilterLimits(-0.4, 0.7);
+    pass_y.setFilterLimits(-Y_MIN, Y_MAX);
     pass_y.filter(*inputcloud);
 
     pass_z.setInputCloud(inputcloud);
@@ -64,7 +64,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
     seg.setMethodType (pcl::SAC_RANSAC);
     seg.setDistanceThreshold (0.2);
 
-     if (outputcloud->points.size() > 10){
+    if (outputcloud->points.size() > 10){
         seg.setInputCloud (outputcloud);
         seg.segment (*inliers, *coefficients);
 
@@ -134,7 +134,6 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     Eigen::Matrix3f                                rotational_matrix_OBB;
     float                                          dimensionX, dimensionY, dimensionZ;
     pcl::PassThrough<pcl::PointXYZ>                passz;
-clock_t start, end;
 ////
     pcl::getMinMax3D(*inputcloud, minPt, maxPt);
 
@@ -151,7 +150,6 @@ clock_t start, end;
     dimensionY = (max_point_OBB.y - min_point_OBB.y);
     dimensionZ = (CAMHEIGHT - minPt.z);
 
-cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
