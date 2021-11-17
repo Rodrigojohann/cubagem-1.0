@@ -4,7 +4,6 @@
 #include <vector>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <objectsdata.h>
 #include "PointXYZ.h"
