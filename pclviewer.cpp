@@ -1,5 +1,4 @@
 ﻿#include "pclviewer.h"
-#include <time.h>
 
 using namespace std;
 
@@ -8,7 +7,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
     Controller c;
     Sensor s;
     ObjectsData outputdata;
-clock_t start, end;
 ///
     x1 = x2 = x3 = x4 = x5 = 0.0;
     y1 = y2 = y3 = y4 = y5 = 0.0;
@@ -46,9 +44,9 @@ clock_t start, end;
         {
             cloudnew.reset(new pcl::PointCloud<pcl::PointXYZ>);
             cloudnew = s.CamStream(ipaddr, PORT);
-start = clock();
+
             filteredcloud = c.FilterCloud(cloudnew);
-end = clock();
+
             std::tie(unsortedclusters, clustersize) = c.CloudSegmentation(filteredcloud);
 
             notorientedclusters = c.SortClusters(unsortedclusters, clustersize);
@@ -120,10 +118,7 @@ end = clock();
                     }
                     break;
                   }
-//cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
             }
-//start = clock();
-//cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
         }
 
         outputdata.connection = "connection succeeded";
@@ -148,8 +143,6 @@ end = clock();
         outputdata.dimensions5.push_back(y5/Nsamples);
         outputdata.dimensions5.push_back(z5/Nsamples);
 
-//end = clock();
-//cout << "time: " << double(end-start)/(CLOCKS_PER_SEC) << " seconds\n";
         return outputdata;
     }
 }

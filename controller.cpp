@@ -1,5 +1,4 @@
 #include "controller.h"
-#include <time.h>
 
 using namespace std;
 typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
@@ -110,13 +109,13 @@ std::tuple<std::vector<pcl::PointIndices>, int> Controller::CloudSegmentation(Po
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
 ////
     if (inputcloud->points.size() > 10){
-    tree->setInputCloud (inputcloud);
-    ec.setClusterTolerance (0.015);
-    ec.setMinClusterSize (100);
-    ec.setMaxClusterSize (25000);
-    ec.setSearchMethod (tree);
-    ec.setInputCloud (inputcloud);
-    ec.extract (clusters);
+        tree->setInputCloud (inputcloud);
+        ec.setClusterTolerance (0.015);
+        ec.setMinClusterSize (100);
+        ec.setMaxClusterSize (25000);
+        ec.setSearchMethod (tree);
+        ec.setInputCloud (inputcloud);
+        ec.extract (clusters);
     }
 
     return std::make_tuple(clusters, clusters.size());
@@ -165,6 +164,7 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
     float                                             tolerance = 0.25;
 ////
     segmented_cloud->points.resize(inputcluster.indices.size());
+
     for(size_t i=0; i<inputcluster.indices.size(); ++i)
     {
         segmented_cloud->points[i].x = (*inputcloud)[inputcluster.indices[i]].x;
