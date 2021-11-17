@@ -4,8 +4,9 @@
 #include <vector>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <../objectsdata.h>
+#include <boost/archive/text_iarchive.hpp>
+#include <objectsdata.h>
+#include "PointXYZ.h"
 
 using boost::asio::ip::tcp;
 
@@ -35,9 +36,10 @@ int main(int argc, char* argv[])
         boost::system::error_code error;
 
         std::size_t length = boost::asio::read(socket, buf, error);
+        std::cout << "read " << length << " bytes" << std::endl;
 
         std::istream is(&buf);
-        boost::archive::binary_iarchive ia(is);
+        boost::archive::text_iarchive ia(is);
 
         ia >> readdata;
 
@@ -66,4 +68,23 @@ int main(int argc, char* argv[])
   }
 
   return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<PointXYZ> ConvertVectortoCloud(std::vector<short> inputvector)
+{
+// var
+     std::vector<PointXYZ> points;
+     std::size_t nr_points = inputvector.size()/3;
+     std::size_t j = 0;
+     const int conversion_factor = 500;
+////
+     points.resize(nr_points);
+
+     for (std::size_t i = 0; i < nr_points; ++i)
+     {
+         points[i].x = inputvector[i*3 + 0]/conversion_factor;
+         points[i].y = inputvector[i*3 + 1]/conversion_factor;
+         points[i].z = inputvector[i*3 + 2]/conversion_factor;
+     }
+     return points;
 }

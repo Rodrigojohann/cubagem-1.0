@@ -30,4 +30,4 @@ set(project_SOURCES main.cpp pclviewer.cpp controller.cpp sensor.cpp)
 add_executable(${PROJECT_NAME} ${project_SOURCES})
 
 #target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES} Qt5::Widgets)
-target_link_libraries(${PROJECT_NAME} sick_visionary_common ${PCL_LIBRARIES} Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} sick_visionary_common ${PCL_LIBRARIES})

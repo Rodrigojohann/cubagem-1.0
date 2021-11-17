@@ -38,7 +38,7 @@ PointCloudT::Ptr Sensor::CamStream(char* ipAddress, unsigned short port)
     }
 
     cloud_raw->points.resize(pointCloud.size());
-    for(size_t i=0; i<cloud_raw->points.size(); ++i)
+    for(size_t i=0; i < cloud_raw->points.size(); ++i)
     {
         cloud_raw->points[i].x = pointCloud[i].x;
         cloud_raw->points[i].y = pointCloud[i].y;
