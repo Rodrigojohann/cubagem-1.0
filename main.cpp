@@ -2,7 +2,7 @@
 #include <boost/asio.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <time.h>
 
 using namespace boost;
