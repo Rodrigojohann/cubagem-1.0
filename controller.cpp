@@ -82,7 +82,6 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
         p.setDistanceThreshold (0.001);
         p.segment(*outputcloud1);
 
-        mls.setComputeNormals (true);
         mls.setInputCloud (outputcloud1);
         mls.setPolynomialFit (false)
         mls.setSearchMethod (tree);
