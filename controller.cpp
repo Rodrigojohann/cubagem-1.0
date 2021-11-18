@@ -84,7 +84,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
 
         mls.setComputeNormals (true);
         mls.setInputCloud (outputcloud1);
-        mls.setPolynomialOrder (2);
+        mls.setPolynomialFit (true)
         mls.setSearchMethod (tree);
         mls.setSearchRadius (0.05);
         mls.process (mls_points);
@@ -182,7 +182,7 @@ bool Controller::NormalOrientation(PointCloudT::Ptr inputcloud, pcl::PointIndice
 
     for (size_t i=0; i < normals->size(); ++i)
     {
-        normal_x_mean += (*normals)[i].normal_x;
+        normal_x_mean += (*normals)[i].normal_x;                                                                
         normal_y_mean += (*normals)[i].normal_y;
     }
 

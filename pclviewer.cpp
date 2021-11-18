@@ -14,7 +14,6 @@ ObjectsData PCLViewer::Run(char* ipaddr){
 
     if (s.TestConnection(ipaddr, PORT) == false)
     {
-
         outputdata.connection = "connection failed";
         outputdata.dimensions1.push_back(0);
         outputdata.dimensions1.push_back(0);
