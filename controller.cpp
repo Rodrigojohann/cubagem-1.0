@@ -84,7 +84,7 @@ PointCloudT::Ptr Controller::FilterCloud(PointCloudT::Ptr inputcloud)
 
         mls.setComputeNormals (true);
         mls.setInputCloud (outputcloud1);
-        mls.setPolynomialOrder (2);
+        mls.setPolynomialFit (true)
         mls.setSearchMethod (tree);
         mls.setSearchRadius (0.05);
         mls.process (mls_points);
