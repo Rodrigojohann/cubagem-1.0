@@ -4,12 +4,32 @@
 #include <vector>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <objectsdata.h>
 #include "PointXYZ.h"
 
 using boost::asio::ip::tcp;
 
+std::vector<PointXYZ> ConvertVectortoCloud(std::vector<short> inputvector)
+{
+// var
+     std::vector<PointXYZ> points;
+     std::size_t nr_points = inputvector.size()/3;
+     std::size_t j = 0;
+     const int conversion_factor = 500;
+////
+     points.resize(nr_points);
+
+     for (std::size_t i = 0; i < nr_points; ++i)
+     {
+         points[i].x = inputvector[i*3 + 0]/conversion_factor;
+         points[i].y = inputvector[i*3 + 1]/conversion_factor;
+         points[i].z = inputvector[i*3 + 2]/conversion_factor;
+     }
+     return points;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
   try
@@ -44,16 +64,16 @@ int main(int argc, char* argv[])
         ia >> readdata;
 
         std::cout << "  Connection: " << readdata.connection << "\n";
-        std::cout << "  Input cloud size: " << readdata.input.size() << "\n";
-        std::cout << "  Object 1 cloud size: " << readdata.box1.size() << "\n";
+        std::cout << "  Input cloud size: " << ConvertVectortoCloud(readdata.input).size() << "\n";
+        std::cout << "  Object 1 cloud size: " << ConvertVectortoCloud(readdata.box1).size() << "\n";
         std::cout << "  Object 1 dimensions: X: " << readdata.dimensions1[0] << "; Y: " << readdata.dimensions1[1] << "; Z: " << readdata.dimensions1[2] << "\n";
-        std::cout << "  Object 2 cloud size: " << readdata.box2.size() << "\n";
+        std::cout << "  Object 2 cloud size: " << ConvertVectortoCloud(readdata.box2).size() << "\n";
         std::cout << "  Object 2 dimensions: X: " << readdata.dimensions2[0] << "; Y: " << readdata.dimensions2[1] << "; Z: " << readdata.dimensions2[2] << "\n";
-        std::cout << "  Object 3 cloud size: " << readdata.box3.size() << "\n";
+        std::cout << "  Object 3 cloud size: " << ConvertVectortoCloud(readdata.box3).size() << "\n";
         std::cout << "  Object 3 dimensions: X: " << readdata.dimensions3[0] << "; Y: " << readdata.dimensions3[1] << "; Z: " << readdata.dimensions3[2] << "\n";
-        std::cout << "  Object 4 cloud size: " << readdata.box4.size() << "\n";
+        std::cout << "  Object 4 cloud size: " << ConvertVectortoCloud(readdata.box4).size() << "\n";
         std::cout << "  Object 4 dimensions: X: " << readdata.dimensions4[0] << "; Y: " << readdata.dimensions4[1] << "; Z: " << readdata.dimensions4[2] << "\n";
-        std::cout << "  Object 5 cloud size: " << readdata.box5.size() << "\n";
+        std::cout << "  Object 5 cloud size: " << ConvertVectortoCloud(readdata.box5).size() << "\n";
         std::cout << "  Object 5 dimensions: X: " << readdata.dimensions5[0] << "; Y: " << readdata.dimensions5[1] << "; Z: " << readdata.dimensions5[2] << "\n";
 
         if (error == boost::asio::error::eof)
@@ -70,21 +90,3 @@ int main(int argc, char* argv[])
   return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<PointXYZ> ConvertVectortoCloud(std::vector<short> inputvector)
-{
-// var
-     std::vector<PointXYZ> points;
-     std::size_t nr_points = inputvector.size()/3;
-     std::size_t j = 0;
-     const int conversion_factor = 500;
-////
-     points.resize(nr_points);
-
-     for (std::size_t i = 0; i < nr_points; ++i)
-     {
-         points[i].x = inputvector[i*3 + 0]/conversion_factor;
-         points[i].y = inputvector[i*3 + 1]/conversion_factor;
-         points[i].z = inputvector[i*3 + 2]/conversion_factor;
-     }
-     return points;
-}
