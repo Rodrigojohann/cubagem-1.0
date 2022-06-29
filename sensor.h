@@ -6,13 +6,22 @@
 #include <pcl/common/common.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <pcl/filters/passthrough.h>
+#include <pcl/common/transforms.h>
+#include <config.h>
+#include <pcl/filters/voxel_grid.h>
+#include <math.h>
 
-typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
-typedef std::vector<PointXYZ>          CloudVector;
+typedef pcl::PointXYZ           PointT;
+typedef pcl::PointXYZI          PointI;
+typedef pcl::PointCloud<PointT> PointCloudT;
+typedef pcl::PointCloud<PointI> PointCloudI;
+typedef std::vector<PointXYZ>   CloudVector;
 
 class Sensor
 {
-public:
-    PointCloudT::Ptr CamStream(char* ipAddress, unsigned short port);
-    bool TestConnection(char* ipAddress, unsigned short port);
+    public:
+        PointCloudI::Ptr CamStream        (char* ipAddress, unsigned short port);
+        bool             TestConnection   (char* ipAddress, unsigned short port);
+        PointCloudI::Ptr RemoveDistortion (PointCloudI::Ptr inputcloud);
 };
