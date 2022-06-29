@@ -1,0 +1,16 @@
+#define  CAMHEIGHT 3.45
+#define  X_MIN 0.5
+#define  X_MAX 0.5
+#define  Y_MIN 0.1
+#define  Y_MAX 0.7
+#define IP1 (char*)"192.168.130.191"
+#define IP2 (char*)"192.168.130.195"
+#define PORT 2114
+#define Nsamples 1
+#define PALLETHEIGHT 0.135
+#define STANDARDBOXVOLUME 0.0033415
+#define NUMBEROFBOXES 18
+#define X_CENTER 0.0
+#define Y_CENTER 0.1
+#define PALLETLENGTH 0.7
+#define ZOOM 3

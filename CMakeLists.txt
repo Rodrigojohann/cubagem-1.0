@@ -11,10 +11,10 @@ set(CMAKE_AUTOUIC ON) # UI files
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Find the QtWidgets library
-#find_package(Qt5 REQUIRED Widgets)
-
+find_package(Qt5 REQUIRED Widgets)
 find_package(VTK REQUIRED)
 find_package(PCL 1.7.1 REQUIRED)
+find_package(CURL REQUIRED)
 
 # Fix a compilation bug under ubuntu 16.04 (Xenial)
 list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
@@ -25,9 +25,10 @@ add_subdirectory(VisionaryCommon)
 include_directories(${PCL_INCLUDE_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-set(project_SOURCES main.cpp pclviewer.cpp controller.cpp sensor.cpp)
+include_directories(${CURL_INCLUDE_DIR})
+
+set(project_SOURCES dlib/dlib/all/source.cpp main.cpp pclviewer.cpp controller.cpp sensor.cpp)
 
 add_executable(${PROJECT_NAME} ${project_SOURCES})
 
-#target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES} Qt5::Widgets)
-target_link_libraries(${PROJECT_NAME} sick_visionary_common ${PCL_LIBRARIES} Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} sick_visionary_common ${PCL_LIBRARIES} Qt5::Widgets)
