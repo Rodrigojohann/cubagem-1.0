@@ -6,8 +6,6 @@
 #define IP1 (char*)"192.168.130.191"
 #define IP2 (char*)"192.168.130.195"
 #define PORT 2114
-#define Nsamples 1
-#define PALLETHEIGHT 0.135
 #define STANDARDBOXVOLUME 0.0033415
 #define NUMBEROFBOXES 18
 #define X_CENTER 0.0

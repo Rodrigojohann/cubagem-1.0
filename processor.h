@@ -28,7 +28,7 @@ typedef pcl::PointXYZI          PointI;
 typedef pcl::PointCloud<PointT> PointCloudT;
 typedef pcl::PointCloud<PointI> PointCloudI;
 
-class Controller
+class Processor
 {
 public:
     PointCloudI::Ptr                PreProcessingCloud(PointCloudI::Ptr inputcloud);

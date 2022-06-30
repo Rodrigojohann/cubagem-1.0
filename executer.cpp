@@ -1,14 +1,14 @@
-﻿#include "pclviewer.h"
+﻿#include "executer.h"
 
 using namespace std;
 
-string PCLViewer::Run(char* ipaddr){
+string Executer::Run(char* ipaddr){
     ////////
-      Controller c;
-      Sensor     s;
+      Processor  processor;
+      Sensor     sensor;
 
       CleanWindow();
-      connection = s.TestConnection(IP2, PORT);
+      connection = sensor.TestConnection(IP2, PORT);
 
       if (connection == false)
       {
@@ -28,62 +28,59 @@ string PCLViewer::Run(char* ipaddr){
       }
       else
       {
-          for (size_t counter = 0; counter < Nsamples; ++counter)
+          cloudnew = sensor.CamStream(IP2, PORT);
+//            cloudnew.reset(new PointCloudI);
+//            pcl::io::loadPCDFile<PointI> ("1651606523.pcd", *cloudnew);
+
+          cloudundistorted = sensor.RemoveDistortion(cloudnew);
+          cloud_preprocessed = processor.PreProcessingCloud(cloudundistorted);
+          if (cloud_preprocessed->points.size() > 100)
           {
-              cloudnew = s.CamStream(IP2, PORT);
-  //            cloudnew.reset(new PointCloudI);
-  //            pcl::io::loadPCDFile<PointI> ("1651606523.pcd", *cloudnew);
+              filteredcloud = processor.FilterROI(cloud_preprocessed, x_min, x_max, y_min, y_max, camheight);
 
-              cloudundistorted = s.RemoveDistortion(cloudnew);
-              cloud_preprocessed = c.PreProcessingCloud(cloudundistorted);
-              if (cloud_preprocessed->points.size() > 100)
+              notorientedclusters = processor.CloudSegmentation(filteredcloud);
+              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+              clusters = processor.IndicestoClouds(filteredcloud, notorientedclusters);
+
+              if (clusters.size() > 10)
               {
-                  filteredcloud = c.FilterROI(cloud_preprocessed, x_min, x_max, y_min, y_max, camheight);
-
-                  notorientedclusters = c.CloudSegmentation(filteredcloud);
-                  std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-                  clusters = c.IndicestoClouds(filteredcloud, notorientedclusters);
-
-                  if (clusters.size() > 10)
-                  {
-                      limitcluster = 10;
-                  }
-                  else
-                  {
-                      limitcluster = clusters.size();
-                  }
-
-                  totalvolume = 0.0;
-                  objvolume = 0.0;
-
-                  for (int number=0; number < limitcluster; ++number)
-                  {
-                      hullarea = c.ConcaveHullArea(c.ProjectCloud(clusters[number]));
-                      std::tie(dimensionX, dimensionY, dimensionZ) = c.CalculateDimensions(clusters[number]);
-
-                      featuresvector = c.ExtractFeatures(clusters[number]);
-                      ////
-                      featuresvector[0] = camheight - featuresvector[0];
-                      ////
-                      featuresvectorvector.push_back(featuresvector);
-
-                      if (dimensionZ > 5)
-                      {
-                          sumsizes += clusters[number]->points.size();
-                          sumZ += dimensionZ*(clusters[number]->points.size());
-                      }
-                  }
-                  sumfeaturesvector = c.ConcatFeatures(featuresvectorvector);
-  //                c.SaveFeatures(sumfeaturesvector);
-
-                  for (int i=0; i < (sumfeaturesvector.size()); ++i)
-                  {
-                      featuresmatrix(i) = sumfeaturesvector[i];
-                  }
-
-                  numberofboxes = round(df(normalizer(featuresmatrix)));
-                  volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
+                  limitcluster = 10;
               }
+              else
+              {
+                  limitcluster = clusters.size();
+              }
+
+              totalvolume = 0.0;
+              objvolume = 0.0;
+
+              for (int number=0; number < limitcluster; ++number)
+              {
+                  hullarea = processor.ConcaveHullArea(processor.ProjectCloud(clusters[number]));
+                  std::tie(dimensionX, dimensionY, dimensionZ) = processor.CalculateDimensions(clusters[number]);
+
+                  featuresvector = processor.ExtractFeatures(clusters[number]);
+                  ////
+                  featuresvector[0] = camheight - featuresvector[0];
+                  ////
+                  featuresvectorvector.push_back(featuresvector);
+
+                  if (dimensionZ > 5)
+                  {
+                      sumsizes += clusters[number]->points.size();
+                      sumZ += dimensionZ*(clusters[number]->points.size());
+                  }
+              }
+              sumfeaturesvector = processor.ConcatFeatures(featuresvectorvector);
+//                processor.SaveFeatures(sumfeaturesvector);
+
+              for (int i=0; i < (sumfeaturesvector.size()); ++i)
+              {
+                  featuresmatrix(i) = sumfeaturesvector[i];
+              }
+
+              numberofboxes = round(df(normalizer(featuresmatrix)));
+              volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
           }
 
           numberofboxes_str = to_string(numberofboxes);
@@ -116,7 +113,7 @@ string PCLViewer::Run(char* ipaddr){
       }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::Clean()
+void Executer::Clean()
 {
     cloud_hull.reset(new PointCloudT);
 
@@ -132,7 +129,7 @@ void PCLViewer::Clean()
     featuresvectorvector.clear();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::ConnectTDC(char *inputurl)
+void Executer::ConnectTDC(char *inputurl)
 {
 // var
     CURL * curl;
@@ -151,7 +148,7 @@ void PCLViewer::ConnectTDC(char *inputurl)
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PCLViewer::SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height)
+void Executer::SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height)
 {
 // var
     CURL *hnd;
@@ -170,7 +167,7 @@ void PCLViewer::SendJSON(int count, double volume, bool connection, double ymin,
     curl_easy_perform(hnd);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-size_t PCLViewer::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+size_t Executer::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
 

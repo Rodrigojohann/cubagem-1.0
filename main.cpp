@@ -1,4 +1,4 @@
-#include "pclviewer.h"
+#include "executer.h"
 #include <boost/asio.hpp>
 #include <boost/serialization/vector.hpp>
 
@@ -10,7 +10,7 @@ int main (int argc, char *argv[])
 {
 /////
     char* ip = argv[1];
-    PCLViewer w;
+    Executer w;
 /////
     try
     {

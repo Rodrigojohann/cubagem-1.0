@@ -1,9 +1,9 @@
-#include "controller.h"
+#include "processor.h"
 
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudI::Ptr Controller::PreProcessingCloud(PointCloudI::Ptr inputcloud){
+PointCloudI::Ptr Processor::PreProcessingCloud(PointCloudI::Ptr inputcloud){
 // var
     PointCloudI::Ptr                        mls_points     (new PointCloudI);
     PointCloudI::Ptr                        filtered_cloud (new PointCloudI);
@@ -30,7 +30,7 @@ PointCloudI::Ptr Controller::PreProcessingCloud(PointCloudI::Ptr inputcloud){
 //    return inputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudI::Ptr Controller::FilterROI(PointCloudI::Ptr inputcloud, double x_min, double x_max, double y_min, double y_max, double camheight)
+PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min, double x_max, double y_min, double y_max, double camheight)
 {
 // var
     pcl::PassThrough<PointI>        pass_x;
@@ -103,7 +103,7 @@ PointCloudI::Ptr Controller::FilterROI(PointCloudI::Ptr inputcloud, double x_min
     return outputcloud1;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
+PointCloudT::Ptr Processor::RemovePallet(PointCloudT::Ptr inputcloud)
 {
 // var
     PointCloudT::Ptr                filtered_cloud (new PointCloudT);
@@ -120,7 +120,7 @@ PointCloudT::Ptr Controller::RemovePallet(PointCloudT::Ptr inputcloud)
     return filtered_cloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudI::Ptr inputcloud)
+std::vector<pcl::PointIndices> Processor::CloudSegmentation(PointCloudI::Ptr inputcloud)
 {
 // var
     std::vector<pcl::PointIndices>                      clusters;
@@ -132,13 +132,13 @@ std::vector<pcl::PointIndices> Controller::CloudSegmentation(PointCloudI::Ptr in
     clustering.setClusterTolerance(0.05);
     clustering.setMinClusterSize(25);
     clustering.setMaxClusterSize(250000);
-    clustering.setConditionFunction(boost::bind(&Controller::ClusterCondition, this, _1, _2, _3));
+    clustering.setConditionFunction(boost::bind(&Processor::ClusterCondition, this, _1, _2, _3));
     clustering.segment(clusters);
 
     return clusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Controller::ClusterCondition(const PointI& seedPoint, const PointI& candidatePoint, float squaredDistance)
+bool Processor::ClusterCondition(const PointI& seedPoint, const PointI& candidatePoint, float squaredDistance)
 {
 // var
     float intensitythreshold = 0.8;
@@ -157,7 +157,7 @@ bool Controller::ClusterCondition(const PointI& seedPoint, const PointI& candida
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr inputcloud)
+std::tuple<float, float, float> Processor::CalculateDimensions(PointCloudT::Ptr inputcloud)
 {
 // var
     pcl::MomentOfInertiaEstimation <PointT> feature_extractor;
@@ -181,7 +181,7 @@ std::tuple<float, float, float> Controller::CalculateDimensions(PointCloudT::Ptr
     return std::make_tuple(dimensionX, dimensionY, dimensionZ);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
+std::vector<PointCloudT::Ptr> Processor::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
 {
 // var
     std::vector<PointCloudT::Ptr>     selectedclusters;
@@ -237,7 +237,7 @@ std::vector<PointCloudT::Ptr> Controller::ExtractTopPlaneBox(PointCloudT::Ptr in
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudI::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices)
+std::vector<PointCloudT::Ptr> Processor::IndicestoClouds(PointCloudI::Ptr inputcloud, std::vector<pcl::PointIndices> inputindices)
 {
 // var
     PointCloudT::Ptr              segmented_cloud (new PointCloudT);
@@ -261,7 +261,7 @@ std::vector<PointCloudT::Ptr> Controller::IndicestoClouds(PointCloudI::Ptr input
     return selectedclusters;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::ConcaveHullArea(PointCloudT::Ptr inputcloud)
+double Processor::ConcaveHullArea(PointCloudT::Ptr inputcloud)
 {
 // var
     PointCloudT::Ptr         cloud_hull (new PointCloudT);
@@ -281,7 +281,7 @@ double Controller::ConcaveHullArea(PointCloudT::Ptr inputcloud)
     return hullarea;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::ConvexHullArea(PointCloudT::Ptr inputcloud)
+double Processor::ConvexHullArea(PointCloudT::Ptr inputcloud)
 {
 // var
     PointCloudT::Ptr        cloud_hull (new PointCloudT);
@@ -300,7 +300,7 @@ double Controller::ConvexHullArea(PointCloudT::Ptr inputcloud)
     return hullarea;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-double Controller::SurfaceArea(double hullarea, double dimensionX, double dimensionY)
+double Processor::SurfaceArea(double hullarea, double dimensionX, double dimensionY)
 {
 // var
     double OBBarea;
@@ -320,7 +320,7 @@ double Controller::SurfaceArea(double hullarea, double dimensionX, double dimens
     return surfacearea;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
+PointCloudT::Ptr Processor::ProjectCloud(PointCloudT::Ptr inputcloud)
 {
 // var
     PointCloudT::Ptr outputcloud (new PointCloudT);
@@ -337,7 +337,7 @@ PointCloudT::Ptr Controller::ProjectCloud(PointCloudT::Ptr inputcloud)
     return outputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<double> Controller::ExtractFeatures(PointCloudT::Ptr inputcloud)
+std::vector<double> Processor::ExtractFeatures(PointCloudT::Ptr inputcloud)
 {
 // var
     std::vector<double>                     outputvector;
@@ -355,7 +355,7 @@ std::vector<double> Controller::ExtractFeatures(PointCloudT::Ptr inputcloud)
     return outputvector;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Controller::SaveFeatures(std::vector<double> inputvector)
+void Processor::SaveFeatures(std::vector<double> inputvector)
 {
 // var
     std::ofstream outdata;
@@ -371,7 +371,7 @@ void Controller::SaveFeatures(std::vector<double> inputvector)
        outdata.close();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<double> Controller::ConcatFeatures(std::vector<std::vector<double>> featuresvectorvector)
+std::vector<double> Processor::ConcatFeatures(std::vector<std::vector<double>> featuresvectorvector)
 {
 // var
     std::vector<double> outputvector;
@@ -423,7 +423,7 @@ std::vector<double> Controller::ConcatFeatures(std::vector<std::vector<double>> 
     return outputvector;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Controller::CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud)
+bool Processor::CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud)
 {
 // var
     PointCloudI::Ptr outputcloud (new PointCloudI);

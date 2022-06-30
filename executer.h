@@ -6,7 +6,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <vtkRenderWindow.h>
 #include <sensor.h>
-#include <controller.h>
+#include <processor.h>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
 #include <thread>
@@ -28,7 +28,7 @@ typedef pcl::PointCloud<pcl::PointXYZRGBA> ColoredCloudT;
 typedef matrix<double, 4, 1>               sample_type;
 typedef radial_basis_kernel<sample_type>   kernel_type;
 
-class PCLViewer
+class Executer
 {
   public:
 
