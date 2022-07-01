@@ -30,7 +30,7 @@ typedef pcl::PointCloud<PointI> PointCloudI;
 
 class Processor
 {
-public:
+  public:
     PointCloudI::Ptr                RemoveDistortion (PointCloudI::Ptr inputcloud);
     PointCloudI::Ptr                PreProcessingCloud(PointCloudI::Ptr inputcloud);
     PointCloudI::Ptr                FilterROI(PointCloudI::Ptr inputcloud, double x_min, double x_max, double y_min, double y_max, double camheight);
@@ -43,8 +43,5 @@ public:
     double                          ConvexHullArea(PointCloudT::Ptr inputcloud);
     double                          SurfaceArea(double hullarea, double dimensionX, double dimensionY);
     PointCloudT::Ptr                ProjectCloud(PointCloudT::Ptr inputcloud);
-    std::vector<double>             ExtractFeatures(PointCloudT::Ptr inputcloud);
-    void                            SaveFeatures(std::vector<double> inputvector);
-    std::vector<double>             ConcatFeatures(std::vector<std::vector<double>>);
     bool                            CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud);
 };

@@ -13,9 +13,8 @@
 #include <math.h>
 #include <iomanip>
 #include <sstream>
-#include <dlib/dlib/svm.h>
 #include <pcl/io/pcd_io.h>
-#include <curl/curl.h>
+#include <connector.h>
 
 using namespace std;
 using namespace dlib;
@@ -33,9 +32,7 @@ class Executer
 
     string        Run();
     void          Clean();
-    void          ConnectTDC(char *inputurl);
-    void          SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height);
-    static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
+
 
   protected:
 
