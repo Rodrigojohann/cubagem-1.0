@@ -20,7 +20,7 @@ string Executer::Run(){
       {
           cloudnew = sensor.CamStream(IP2, PORT);
 
-          cloudundistorted = sensor.RemoveDistortion(cloudnew);
+          cloudundistorted = processor.RemoveDistortion(cloudnew);
           cloud_preprocessed = processor.PreProcessingCloud(cloudundistorted);
           filteredcloud = processor.FilterROI(cloud_preprocessed, x_min, x_max, y_min, y_max, camheight);
 
@@ -62,9 +62,9 @@ string Executer::Run(){
 
   //        SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
 
-          outputarray.push_back(numberobboxes_str);
+//          outputarray.push_back(numberofboxes_str);
 
-          outputstring = str(outputarray);
+          outputstring = numberofboxes_str;
 
           return outputstring;
       }

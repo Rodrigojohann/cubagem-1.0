@@ -31,7 +31,7 @@ class Executer
 {
   public:
 
-    string        Run(char* ipaddr);
+    string        Run();
     void          Clean();
     void          ConnectTDC(char *inputurl);
     void          SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height);
