@@ -31,9 +31,9 @@ typedef pcl::PointCloud<PointI> PointCloudI;
 class Processor
 {
 public:
+    PointCloudI::Ptr                RemoveDistortion (PointCloudI::Ptr inputcloud);
     PointCloudI::Ptr                PreProcessingCloud(PointCloudI::Ptr inputcloud);
     PointCloudI::Ptr                FilterROI(PointCloudI::Ptr inputcloud, double x_min, double x_max, double y_min, double y_max, double camheight);
-    PointCloudT::Ptr                RemovePallet(PointCloudT::Ptr inputcloud);
     std::vector<pcl::PointIndices>  CloudSegmentation(PointCloudI::Ptr inputcloud);
     bool                            ClusterCondition(const PointI& seedPoint, const PointI& candidatePoint, float squaredDistance);
     std::tuple<float, float, float> CalculateDimensions(PointCloudT::Ptr inputcloud);

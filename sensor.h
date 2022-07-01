@@ -23,5 +23,4 @@ class Sensor
     public:
         PointCloudI::Ptr CamStream        (char* ipAddress, unsigned short port);
         bool             TestConnection   (char* ipAddress, unsigned short port);
-        PointCloudI::Ptr RemoveDistortion (PointCloudI::Ptr inputcloud);
 };

@@ -2,112 +2,69 @@
 
 using namespace std;
 
-string Executer::Run(char* ipaddr){
-    ////////
+string Executer::Run(){
+// var
       Processor  processor;
       Sensor     sensor;
-
-      CleanWindow();
+////
+      Clean();
       connection = sensor.TestConnection(IP2, PORT);
 
       if (connection == false)
       {
-          outputarray.push_back("connection failed");
+          outputstring = "connection failed";
 
-          std::stringstream ss;
-
-          for(size_t i = 0; i < outputarray.size(); ++i)
-          {
-            if(i != 0)
-              ss << ",";
-            ss << outputarray[i];
-          }
-
-          outputstring = ss.str();
           return outputstring;
       }
       else
       {
           cloudnew = sensor.CamStream(IP2, PORT);
-//            cloudnew.reset(new PointCloudI);
-//            pcl::io::loadPCDFile<PointI> ("1651606523.pcd", *cloudnew);
 
           cloudundistorted = sensor.RemoveDistortion(cloudnew);
           cloud_preprocessed = processor.PreProcessingCloud(cloudundistorted);
-          if (cloud_preprocessed->points.size() > 100)
+          filteredcloud = processor.FilterROI(cloud_preprocessed, x_min, x_max, y_min, y_max, camheight);
+
+          clusters_indices = processor.CloudSegmentation(filteredcloud);
+          std::sort(clusters_indices.begin(), clusters_indices.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
+          clusters = processor.IndicestoClouds(filteredcloud, clusters_indices);
+
+          for (int number=0; number < clusters.size(); ++number)
           {
-              filteredcloud = processor.FilterROI(cloud_preprocessed, x_min, x_max, y_min, y_max, camheight);
+              hullarea = processor.ConcaveHullArea(processor.ProjectCloud(clusters[number]));
+              std::tie(dimensionX, dimensionY, dimensionZ) = processor.CalculateDimensions(clusters[number]);
 
-              notorientedclusters = processor.CloudSegmentation(filteredcloud);
-              std::sort(notorientedclusters.begin(), notorientedclusters.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
-              clusters = processor.IndicestoClouds(filteredcloud, notorientedclusters);
+              featuresvector = processor.ExtractFeatures(clusters[number]);
+              featuresvector[0] = camheight - featuresvector[0];
+              featuresvectorvector.push_back(featuresvector);
+          }
 
-              if (clusters.size() > 10)
-              {
-                  limitcluster = 10;
-              }
-              else
-              {
-                  limitcluster = clusters.size();
-              }
-
-              totalvolume = 0.0;
-              objvolume = 0.0;
-
-              for (int number=0; number < limitcluster; ++number)
-              {
-                  hullarea = processor.ConcaveHullArea(processor.ProjectCloud(clusters[number]));
-                  std::tie(dimensionX, dimensionY, dimensionZ) = processor.CalculateDimensions(clusters[number]);
-
-                  featuresvector = processor.ExtractFeatures(clusters[number]);
-                  ////
-                  featuresvector[0] = camheight - featuresvector[0];
-                  ////
-                  featuresvectorvector.push_back(featuresvector);
-
-                  if (dimensionZ > 5)
-                  {
-                      sumsizes += clusters[number]->points.size();
-                      sumZ += dimensionZ*(clusters[number]->points.size());
-                  }
-              }
-              sumfeaturesvector = processor.ConcatFeatures(featuresvectorvector);
+          sumfeaturesvector = processor.ConcatFeatures(featuresvectorvector);
 //                processor.SaveFeatures(sumfeaturesvector);
 
-              for (int i=0; i < (sumfeaturesvector.size()); ++i)
-              {
-                  featuresmatrix(i) = sumfeaturesvector[i];
-              }
-
-              numberofboxes = round(df(normalizer(featuresmatrix)));
-              volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
+          for (int i=0; i < (sumfeaturesvector.size()); ++i)
+          {
+              featuresmatrix(i) = sumfeaturesvector[i];
           }
+
+          numberofboxes = round(df(normalizer(featuresmatrix)));
+          volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
 
           numberofboxes_str = to_string(numberofboxes);
 
-          if (numberofboxes == NUMBEROFBOXES)
-          {
-  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/on");
-          }
-          else
-          {
-  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/off");
-          }
+//          if (numberofboxes == NUMBEROFBOXES)
+//          {
+//  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/on");
+//          }
+//          else
+//          {
+//  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/off");
+//          }
 
   //        SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
 
-          outputarray.push_back("{");
+          outputarray.push_back(numberobboxes_str);
 
-          std::stringstream ss;
-
-          for(size_t i = 0; i < outputarray.size(); ++i)
-          {
-  //          if(i != 0)
-  //            ss << ",";
-            ss << outputarray[i];
-          }
-
-          outputstring = ss.str();
+          outputstring = str(outputarray);
 
           return outputstring;
       }
@@ -115,17 +72,8 @@ string Executer::Run(char* ipaddr){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Executer::Clean()
 {
-    cloud_hull.reset(new PointCloudT);
-
-    if (firstCall == true)
-    {
-        firstCall = false;
-    }
-
     numberofboxes = 0;
     volumemean = 0.0;
-    sumsizes = 0;
-    sumZ = 0;
     featuresvectorvector.clear();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

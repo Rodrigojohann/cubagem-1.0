@@ -3,7 +3,41 @@
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudI::Ptr Processor::PreProcessingCloud(PointCloudI::Ptr inputcloud){
+PointCloudI::Ptr Processor::RemoveDistortion(PointCloudI::Ptr inputcloud){
+// var
+    PointCloudI::Ptr outputcloud (new PointCloudI);
+    double           xi, yi, zi, xi_0, yi_0, zi_0, i_0, Ri, M, x2, y2;
+////
+    if (inputcloud->points.size() > 0)
+    {
+        outputcloud->points.resize(inputcloud->points.size());
+
+        for(size_t i=0; i<outputcloud->points.size(); ++i)
+        {
+            xi_0 = (*inputcloud)[i].x;
+            yi_0 = (*inputcloud)[i].y;
+            zi_0 = (*inputcloud)[i].z;
+            i_0 = (*inputcloud)[i].intensity;
+
+            x2 = xi_0*xi_0;
+            y2 = yi_0*yi_0;
+
+            xi = xi_0;
+            yi = yi_0;
+            zi = zi_0 - zi_0*(7.77e-6*exp(-((4*x2)+y2)/8192) + 4.83e-6*exp(-(x2+y2)/4608) + 6.99e-6*exp(-(x2+y2)/8192));
+
+            outputcloud->points[i].x = (xi);
+            outputcloud->points[i].y = (yi);
+            outputcloud->points[i].z = (zi);
+            outputcloud->points[i].intensity = (i_0);
+        }
+    }
+
+    return outputcloud;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudI::Ptr Processor::PreProcessingCloud(PointCloudI::Ptr inputcloud)
+{
 // var
     PointCloudI::Ptr                        mls_points     (new PointCloudI);
     PointCloudI::Ptr                        filtered_cloud (new PointCloudI);
@@ -11,23 +45,22 @@ PointCloudI::Ptr Processor::PreProcessingCloud(PointCloudI::Ptr inputcloud){
     pcl::RadiusOutlierRemoval<PointI>       outrem;
     pcl::MovingLeastSquares<PointI, PointI> mls;
 ////
-    if (inputcloud->points.size() > 10){
-
+    if (inputcloud->points.size() > 0)
+    {
         mls.setInputCloud(inputcloud);
         mls.setPolynomialOrder(3);
         mls.setSearchMethod(tree);
         mls.setSearchRadius(0.03);
         mls.process(*mls_points);
+
+        outrem.setInputCloud(mls_points);
+        outrem.setRadiusSearch(0.05);
+        outrem.setMinNeighborsInRadius(3);
+        outrem.setKeepOrganized(false);
+        outrem.filter(*filtered_cloud);
     }
 
-    outrem.setInputCloud(mls_points);
-    outrem.setRadiusSearch(0.05);
-    outrem.setMinNeighborsInRadius(3);
-    outrem.setKeepOrganized(false);
-    outrem.filter(*filtered_cloud);
-
     return filtered_cloud;
-//    return inputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min, double x_max, double y_min, double y_max, double camheight)
@@ -36,104 +69,82 @@ PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min,
     pcl::PassThrough<PointI>        pass_x;
     pcl::PassThrough<PointI>        pass_y;
     pcl::PassThrough<PointI>        pass_z;
-    PointCloudI::Ptr                outputcloud  (new PointCloudI);
-    PointCloudI::Ptr                outputcloud1 (new PointCloudI);
-    pcl::PointIndicesPtr            ground       (new pcl::PointIndices);
-    pcl::ModelCoefficients::Ptr     coefficients (new pcl::ModelCoefficients);
-    pcl::PointIndices::Ptr          inliers      (new pcl::PointIndices);
+    PointCloudI::Ptr                cloud_passthrough  (new PointCloudI);
+    PointCloudI::Ptr                outputcloud        (new PointCloudI);
+    pcl::PointIndicesPtr            ground             (new pcl::PointIndices);
+    pcl::PointIndices::Ptr          inliers            (new pcl::PointIndices);
+    pcl::ModelCoefficients::Ptr     coefficients       (new pcl::ModelCoefficients);
     pcl::SACSegmentation<PointI>    seg;
     pcl::SegmentDifferences<PointI> p;
 ////
-    pass_x.setInputCloud(inputcloud);
-    pass_x.setFilterFieldName("x");
-    pass_x.setFilterLimits(-x_min, x_max);;
-    pass_x.filter(*inputcloud);
+    if (inputcloud->points.size() > 100)
+    {
+        pass_x.setInputCloud(inputcloud);
+        pass_x.setFilterFieldName("x");
+        pass_x.setFilterLimits(-x_min, x_max);;
+        pass_x.filter(*inputcloud);
 
-    pass_y.setInputCloud(inputcloud);
-    pass_y.setFilterFieldName("y");
-    pass_y.setFilterLimits(-y_min, y_max);
-    pass_y.filter(*inputcloud);
+        pass_y.setInputCloud(inputcloud);
+        pass_y.setFilterFieldName("y");
+        pass_y.setFilterLimits(-y_min, y_max);
+        pass_y.filter(*inputcloud);
 
-    pass_z.setInputCloud(inputcloud);
-    pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits(0.0, (camheight+0.08));
-    pass_z.filter(*inputcloud);
+        pass_z.setInputCloud(inputcloud);
+        pass_z.setFilterFieldName("z");
+        pass_z.setFilterLimits(0.0, (camheight+0.08));
+        pass_z.filter(*inputcloud);
 
-    pass_z.setInputCloud(inputcloud);
-    pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits((camheight - 0.08), (camheight + 0.08));
-    pass_z.filter(*outputcloud);
+        pass_z.setInputCloud(inputcloud);
+        pass_z.setFilterFieldName("z");
+        pass_z.setFilterLimits((camheight - 0.08), (camheight + 0.08));
+        pass_z.filter(*cloud_passthrough);
+    }
 
-    seg.setOptimizeCoefficients(true);
-    seg.setModelType(pcl::SACMODEL_PLANE);
-    seg.setMethodType(pcl::SAC_RANSAC);
-    seg.setDistanceThreshold(0.2);
-
-    if (outputcloud->points.size() > 10){
-        seg.setInputCloud (outputcloud);
+    if (cloud_passthrough->points.size() > 100)
+    {
+        seg.setInputCloud(cloud_passthrough);
+        seg.setOptimizeCoefficients(true);
+        seg.setModelType(pcl::SACMODEL_PLANE);
+        seg.setMethodType(pcl::SAC_RANSAC);
+        seg.setDistanceThreshold(0.2);
         seg.segment(*inliers, *coefficients);
 
-        outputcloud1->points.resize(inliers->indices.size());
+        outputcloud->points.resize(inliers->indices.size());
 
         for (size_t i = 0; i < inliers->indices.size(); ++i)
         {
-            outputcloud1->points[i].x = (*outputcloud)[inliers->indices[i]].x;
-            outputcloud1->points[i].y = (*outputcloud)[inliers->indices[i]].y;
-            outputcloud1->points[i].z = (*outputcloud)[inliers->indices[i]].z;
-            outputcloud1->points[i].intensity = (*outputcloud)[i].intensity;
+            outputcloud->points[i].x = (*cloud_passthrough)[inliers->indices[i]].x;
+            outputcloud->points[i].y = (*cloud_passthrough)[inliers->indices[i]].y;
+            outputcloud->points[i].z = (*cloud_passthrough)[inliers->indices[i]].z;
+            outputcloud->points[i].intensity = (*cloud_passthrough)[i].intensity;
         }
 
         p.setInputCloud(inputcloud);
-        p.setTargetCloud(outputcloud1);
+        p.setTargetCloud(outputcloud);
         p.setDistanceThreshold(0.001);
-        p.segment(*outputcloud1);
-    }
-    else
-    {
-        outputcloud1->points.resize(inputcloud->points.size());
-        for (size_t i = 0; i < inputcloud->points.size(); ++i)
-        {
-            outputcloud1->points[i].x = (*inputcloud)[i].x;
-            outputcloud1->points[i].y = (*inputcloud)[i].y;
-            outputcloud1->points[i].z = (*inputcloud)[i].z;
-            outputcloud1->points[i].intensity = (*inputcloud)[i].intensity;
-        }
+        p.segment(*outputcloud);
     }
 
-    return outputcloud1;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudT::Ptr Processor::RemovePallet(PointCloudT::Ptr inputcloud)
-{
-// var
-    PointCloudT::Ptr                filtered_cloud (new PointCloudT);
-    PointT                   minPt, maxPt;
-    pcl::PassThrough<PointT> pass_z;
-////
-    pcl::getMinMax3D(*inputcloud, minPt, maxPt);
-
-    pass_z.setInputCloud(inputcloud);
-    pass_z.setFilterFieldName("z");
-    pass_z.setFilterLimits(0, (CAMHEIGHT - PALLETHEIGHT));
-    pass_z.filter(*filtered_cloud);
-
-    return filtered_cloud;
+    return outputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<pcl::PointIndices> Processor::CloudSegmentation(PointCloudI::Ptr inputcloud)
 {
 // var
-    std::vector<pcl::PointIndices>                      clusters;
-    pcl::ConditionalEuclideanClustering<PointI>         clustering  (true);
-    pcl::search::KdTree<PointI>::Ptr                    search_tree (new pcl::search::KdTree<PointI>);
-    pcl::EuclideanClusterExtraction<PointI>             ec;
+    std::vector<pcl::PointIndices>              clusters;
+    pcl::ConditionalEuclideanClustering<PointI> clustering  (true);
+    pcl::search::KdTree<PointI>::Ptr            search_tree (new pcl::search::KdTree<PointI>);
+    pcl::EuclideanClusterExtraction<PointI>     ec;
 ////
-    clustering.setInputCloud(inputcloud);
-    clustering.setClusterTolerance(0.05);
-    clustering.setMinClusterSize(25);
-    clustering.setMaxClusterSize(250000);
-    clustering.setConditionFunction(boost::bind(&Processor::ClusterCondition, this, _1, _2, _3));
-    clustering.segment(clusters);
+    if (inputcloud->points.size() > 0)
+    {
+        clustering.setInputCloud(inputcloud);
+        clustering.setClusterTolerance(0.05);
+        clustering.setMinClusterSize(25);
+        clustering.setMaxClusterSize(250000);
+        clustering.setConditionFunction(boost::bind(&Processor::ClusterCondition, this, _1, _2, _3));
+        clustering.segment(clusters);
+    }
 
     return clusters;
 }
@@ -148,12 +159,12 @@ bool Processor::ClusterCondition(const PointI& seedPoint, const PointI& candidat
     {
         if (std::abs(seedPoint.intensity - candidatePoint.intensity) < intensitythreshold)
          {
-             return (true);
+             return true;
          }
     }
     else
     {
-        return (false);
+        return false;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,17 +179,27 @@ std::tuple<float, float, float> Processor::CalculateDimensions(PointCloudT::Ptr 
     float                                   dimensionX, dimensionY, dimensionZ;
     PointT                                  centroid;
 ////
-    pcl::computeCentroid(*inputcloud, centroid);
+    if (inputcloud->points.size() > 0)
+    {
+        pcl::computeCentroid(*inputcloud, centroid);
 
-    feature_extractor.setInputCloud(inputcloud);
-    feature_extractor.compute();
-    feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+        feature_extractor.setInputCloud(inputcloud);
+        feature_extractor.compute();
+        feature_extractor.getOBB(min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
-    dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
-    dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
-    dimensionZ = (CAMHEIGHT - centroid.z)*100;
+        dimensionX = (max_point_OBB.x - min_point_OBB.x)*100;
+        dimensionY = (max_point_OBB.y - min_point_OBB.y)*100;
+        dimensionZ = (CAMHEIGHT - centroid.z)*100;
+    }
 
-    return std::make_tuple(dimensionX, dimensionY, dimensionZ);
+    if ((dimensionX > 5) and (dimensionY > 5) and (dimensionZ > 5))
+    {
+        return std::make_tuple(dimensionX, dimensionY, dimensionZ);
+    }
+    else
+    {
+        return std::make_tuple(0.0, 0.0, 0.0);
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 std::vector<PointCloudT::Ptr> Processor::ExtractTopPlaneBox(PointCloudT::Ptr inputcloud, std::vector <pcl::PointIndices> inputclusters)
