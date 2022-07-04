@@ -22,6 +22,7 @@
 #include <pcl/registration/icp.h>
 #include <pcl/features/vfh.h>
 #include <pcl/features/grsd.h>
+#include <boost/bind.hpp>
 
 typedef pcl::PointXYZ           PointT;
 typedef pcl::PointXYZI          PointI;

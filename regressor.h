@@ -1,6 +1,7 @@
 #include <dlib/dlib/svm.h>
 #include <pcl/point_types.h>
 #include <pcl/common/common.h>
+#include <processor.h>
 
 typedef pcl::PointCloud<PointT> PointCloudT;
 

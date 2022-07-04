@@ -1,13 +1,12 @@
 ﻿#include "executer.h"
 
-using namespace std;
-
-string Executer::Run(){
+std::string Executer::Run(){
 // var
       Processor  processor;
       Sensor     sensor;
+      Regressor  regressor;
+      Connector  connector;
 ////
-      Clean();
       connection = sensor.TestConnection(IP2, PORT);
 
       if (connection == false)
@@ -27,18 +26,19 @@ string Executer::Run(){
           clusters_indices = processor.CloudSegmentation(filteredcloud);
           std::sort(clusters_indices.begin(), clusters_indices.end(), [](pcl::PointIndices & a, pcl::PointIndices & b){ return a.indices.size() > b.indices.size();});
           clusters = processor.IndicestoClouds(filteredcloud, clusters_indices);
+          featuresvectorvector.clear();
 
           for (int number=0; number < clusters.size(); ++number)
           {
               hullarea = processor.ConcaveHullArea(processor.ProjectCloud(clusters[number]));
               std::tie(dimensionX, dimensionY, dimensionZ) = processor.CalculateDimensions(clusters[number]);
 
-              featuresvector = processor.ExtractFeatures(clusters[number]);
+              featuresvector = regressor.ExtractFeatures(clusters[number]);
               featuresvector[0] = camheight - featuresvector[0];
               featuresvectorvector.push_back(featuresvector);
           }
 
-          sumfeaturesvector = processor.ConcatFeatures(featuresvectorvector);
+          sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
 //                processor.SaveFeatures(sumfeaturesvector);
 
           for (int i=0; i < (sumfeaturesvector.size()); ++i)
@@ -49,7 +49,7 @@ string Executer::Run(){
           numberofboxes = round(df(normalizer(featuresmatrix)));
           volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
 
-          numberofboxes_str = to_string(numberofboxes);
+          numberofboxes_str = std::to_string(numberofboxes);
 
 //          if (numberofboxes == NUMBEROFBOXES)
 //          {
@@ -70,9 +70,3 @@ string Executer::Run(){
       }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Executer::Clean()
-{
-    numberofboxes = 0;
-    volumemean = 0.0;
-    featuresvectorvector.clear();
-}

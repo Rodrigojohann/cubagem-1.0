@@ -1,5 +1,7 @@
 #include "connector.h"
 
+using namespace std;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Connector::ConnectTDC(char *inputurl)
 {
@@ -15,7 +17,7 @@ void Connector::ConnectTDC(char *inputurl)
       curl_easy_setopt(curl, CURLOPT_URL, inputurl);
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-      res = curl_easy_perform(curl);
+//      res = curl_easy_perform(curl);
       curl_easy_cleanup(curl);
     }
 }

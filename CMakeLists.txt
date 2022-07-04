@@ -27,7 +27,7 @@ add_definitions(${PCL_DEFINITIONS})
 
 include_directories(${CURL_INCLUDE_DIR})
 
-set(project_SOURCES dlib/dlib/all/source.cpp main.cpp pclviewer.cpp controller.cpp sensor.cpp)
+set(project_SOURCES dlib/dlib/all/source.cpp main.cpp executer.cpp processor.cpp sensor.cpp connector.cpp regressor.cpp)
 
 add_executable(${PROJECT_NAME} ${project_SOURCES})
 

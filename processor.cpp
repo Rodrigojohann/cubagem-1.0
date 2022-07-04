@@ -1,6 +1,4 @@
-#include "processor.h"
-
-using namespace std;
+﻿#include "processor.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PointCloudI::Ptr Processor::RemoveDistortion(PointCloudI::Ptr inputcloud){
@@ -158,9 +156,13 @@ bool Processor::ClusterCondition(const PointI& seedPoint, const PointI& candidat
     if (std::abs(seedPoint.z) - std::abs(candidatePoint.z) < heightthreshold)
     {
         if (std::abs(seedPoint.intensity - candidatePoint.intensity) < intensitythreshold)
-         {
-             return true;
-         }
+        {
+           return true;
+        }
+        else
+        {
+           return false;
+        }
     }
     else
     {
@@ -176,7 +178,9 @@ std::tuple<float, float, float> Processor::CalculateDimensions(PointCloudT::Ptr 
     PointT                                  max_point_OBB;
     PointT                                  position_OBB;
     Eigen::Matrix3f                         rotational_matrix_OBB;
-    float                                   dimensionX, dimensionY, dimensionZ;
+    float                                   dimensionX = 0.0;
+    float                                   dimensionY = 0.0;
+    float                                   dimensionZ = 0.0;
     PointT                                  centroid;
 ////
     if (inputcloud->points.size() > 0)
