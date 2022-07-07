@@ -32,7 +32,7 @@ class Executer
 {
   public:
 
-    std::string   Run();
+    void Run();
 
   protected:
 
