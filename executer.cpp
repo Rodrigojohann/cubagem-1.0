@@ -6,6 +6,9 @@ std::string Executer::Run(){
       Sensor     sensor;
       Regressor  regressor;
       Connector  connector;
+
+      dlib::deserialize("./saved_function_face3.dat") >> df;
+      dlib::deserialize("./normalizer_function_face3.dat") >> normalizer;
 ////
       connection = sensor.TestConnection(IP2, PORT);
 
