@@ -10,6 +10,7 @@ int main()
       for (;;)
       {
         std::string data = executer.Run();
+        std::cout << data;
       }
     }
     catch (std::exception& e)

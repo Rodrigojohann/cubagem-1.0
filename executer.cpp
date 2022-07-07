@@ -54,18 +54,18 @@ std::string Executer::Run(){
 
           numberofboxes_str = std::to_string(numberofboxes);
 
-//          if (numberofboxes == NUMBEROFBOXES)
-//          {
-//  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/on");
-//          }
-//          else
-//          {
-//  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/off");
-//          }
+          if (numberofboxes == NUMBEROFBOXES)
+          {
+  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/on");
+          }
+          else
+          {
+  //            ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/off");
+          }
 
-  //        SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
+//          SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
 
-//          outputarray.push_back(numberofboxes_str);
+          outputarray.push_back(numberofboxes_str);
 
           outputstring = numberofboxes_str;
 

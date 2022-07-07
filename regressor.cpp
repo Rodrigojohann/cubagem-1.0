@@ -44,46 +44,49 @@ std::vector<double> Regressor::ConcatFeatures(std::vector<std::vector<double>> f
     std::vector<double> minorvector;
     std::vector<double> featuresvector;
 ////
-    outputvector.resize(featuresvectorvector[0].size());
-    majorvector.resize(featuresvectorvector[0].size());
-    minorvector.resize(featuresvectorvector[0].size());
-//std::cout << "\n\nclusters: " << featuresvectorvector.size();
-
-    majorvector = featuresvectorvector[0];
-
-//std::cout << "\n\nCentroid: "  << majorvector[0];
-//std::cout << "\nArea: " << majorvector[1];
-
-    for (int i = 1; i < featuresvectorvector.size(); ++i)
+    if (featuresvectorvector.size() > 0)
     {
-        featuresvector = featuresvectorvector[i];
+        outputvector.resize(featuresvectorvector[0].size());
+        majorvector.resize(featuresvectorvector[0].size());
+        minorvector.resize(featuresvectorvector[0].size());
+    //std::cout << "\n\nclusters: " << featuresvectorvector.size();
 
-        minorvector[0] += featuresvector[1]*featuresvector[0];
-        minorvector[1] += featuresvector[1];
+        majorvector = featuresvectorvector[0];
 
-//std::cout << "\n\nCentroid: "  << featuresvector[0];
-//std::cout << "\nArea: " << featuresvector[1];
+    //std::cout << "\n\nCentroid: "  << majorvector[0];
+    //std::cout << "\nArea: " << majorvector[1];
 
+        for (int i = 1; i < featuresvectorvector.size(); ++i)
+        {
+            featuresvector = featuresvectorvector[i];
+
+            minorvector[0] += featuresvector[1]*featuresvector[0];
+            minorvector[1] += featuresvector[1];
+
+    //std::cout << "\n\nCentroid: "  << featuresvector[0];
+    //std::cout << "\nArea: " << featuresvector[1];
+
+        }
+
+        minorvector[0] = minorvector[0]/minorvector[1];
+
+        if (featuresvectorvector.size() == 1)
+        {
+            outputvector = majorvector;
+        }
+
+        else
+        {
+            outputvector[0] = (majorvector[1]*majorvector[0] + 5*minorvector[1]*minorvector[0])/(majorvector[1]+5*minorvector[1]);
+            outputvector[1] = majorvector[1] + minorvector[1];
+        }
+
+        outputvector.push_back(majorvector[0]);
+        outputvector.push_back(majorvector[1]);
+
+    //std::cout << "\n\nTotal Centroid: " << outputvector[0];
+    //std::cout << "\nTotal Area: " << outputvector[1];
     }
-
-    minorvector[0] = minorvector[0]/minorvector[1];
-
-    if (featuresvectorvector.size() == 1)
-    {
-        outputvector = majorvector;
-    }
-
-    else
-    {
-        outputvector[0] = (majorvector[1]*majorvector[0] + 5*minorvector[1]*minorvector[0])/(majorvector[1]+5*minorvector[1]);
-        outputvector[1] = majorvector[1] + minorvector[1];
-    }
-
-    outputvector.push_back(majorvector[0]);
-    outputvector.push_back(majorvector[1]);
-
-//std::cout << "\n\nTotal Centroid: " << outputvector[0];
-//std::cout << "\nTotal Area: " << outputvector[1];
 
     return outputvector;
 }
