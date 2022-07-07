@@ -1,14 +1,16 @@
-#pragma once
-#include <QMainWindow>
-#include <QFileDialog>
-#include <QColor>
-#include <QTimer>
-#include <pcl/visualization/pcl_visualizer.h>
-#include <vtkRenderWindow.h>
+#ifndef EXECUTER_H
+#define EXECUTER_H
+
+//#include <QMainWindow>
+//#include <QFileDialog>
+//#include <QColor>
+//#include <QTimer>
+//#include <pcl/visualization/pcl_visualizer.h>
+//#include <vtkRenderWindow.h>
 #include <sensor.h>
 #include <processor.h>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
+//#include <boost/thread/mutex.hpp>
+//#include <boost/thread/thread.hpp>
 #include <thread>
 #include <math.h>
 #include <iomanip>
@@ -56,3 +58,5 @@ class Executer
     std::vector<std::string>                             outputarray;
     std::string                                          outputstring;
 };
+
+#endif // EXECUTER_H

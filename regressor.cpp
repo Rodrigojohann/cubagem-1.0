@@ -25,7 +25,7 @@ void Regressor::SaveFeatures(std::vector<double> inputvector)
 // var
     std::ofstream outdata;
 ////
-    outdata.open("./svr_train/sickboxes_face2_new_cleaned.csv", std::ios_base::app);
+    outdata.open("./sickboxes_face2_new_cleaned.csv", std::ios_base::app);
     if( !outdata ) { // file couldn't be opened
        std::cerr << "Error: file could not be opened";
        exit(1);

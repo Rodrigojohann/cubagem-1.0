@@ -1,3 +1,6 @@
+#ifndef SENSOR_H
+#define SENSOR_H
+
 #include "PointXYZ.h"
 #include "VisionaryTData.h"
 #include "VisionaryDataStream.h"
@@ -24,3 +27,5 @@ class Sensor
         PointCloudI::Ptr CamStream        (char* ipAddress, unsigned short port);
         bool             TestConnection   (char* ipAddress, unsigned short port);
 };
+
+#endif // SENSOR_H

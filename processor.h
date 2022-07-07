@@ -1,3 +1,6 @@
+#ifndef PROCESSOR_H
+#define PROCESSOR_H
+
 #include <pcl/filters/passthrough.h>
 #include <pcl/common/common.h>
 #include <pcl/features/normal_3d.h>
@@ -46,3 +49,5 @@ class Processor
     PointCloudT::Ptr                ProjectCloud(PointCloudT::Ptr inputcloud);
     bool                            CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud);
 };
+
+#endif // PROCESSOR_H
