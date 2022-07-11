@@ -31,8 +31,11 @@ void Executer::Run(){
             clusters = processor.IndicestoClouds(filteredcloud, clusters_indices);
             featuresvectorvector.clear();
 
+            concatclusters.reset(new PointCloudT);
+
             for (int number=0; number < clusters.size(); ++number)
             {
+                *concatclusters = *concatclusters + *clusters[number];
                 hullarea = processor.ConcaveHullArea(processor.ProjectCloud(clusters[number]));
                 std::tie(dimensionX, dimensionY, dimensionZ) = processor.CalculateDimensions(clusters[number]);
 

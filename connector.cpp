@@ -3,25 +3,6 @@
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Connector::ConnectTDC(char *inputurl)
-{
-// var
-    CURL * curl;
-    CURLcode res;
-    std::string readBuffer;
-////
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      curl_easy_setopt(curl, CURLOPT_URL, inputurl);
-      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-//      res = curl_easy_perform(curl);
-      curl_easy_cleanup(curl);
-    }
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Connector::SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height)
 {
 // var

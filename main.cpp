@@ -7,8 +7,7 @@ int main()
 /////
     try
     {
-        std::string data = executer.Run();
-        std::cout << data;
+        executer.Run();
     }
     catch (std::exception& e)
     {

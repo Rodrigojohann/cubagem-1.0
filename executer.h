@@ -1,16 +1,8 @@
 #ifndef EXECUTER_H
 #define EXECUTER_H
 
-//#include <QMainWindow>
-//#include <QFileDialog>
-//#include <QColor>
-//#include <QTimer>
-//#include <pcl/visualization/pcl_visualizer.h>
-//#include <vtkRenderWindow.h>
 #include <sensor.h>
 #include <processor.h>
-//#include <boost/thread/mutex.hpp>
-//#include <boost/thread/thread.hpp>
 #include <thread>
 #include <math.h>
 #include <iomanip>
@@ -19,6 +11,7 @@
 #include <connector.h>
 #include <regressor.h>
 #include <dlib/dlib/svm.h>
+#include <pcl/io/point_cloud_image_extractors.h>
 
 typedef pcl::PointXYZ                          PointT;
 typedef pcl::PointXYZI                         PointI;
@@ -40,6 +33,7 @@ class Executer
     PointCloudI::Ptr                                     cloudundistorted;
     PointCloudI::Ptr                                     cloud_preprocessed;
     PointCloudI::Ptr                                     filteredcloud;
+    PointCloudT::Ptr                                     concatclusters;
     std::vector<pcl::PointIndices>                       clusters_indices;
     std::vector<PointCloudT::Ptr>                        clusters;
     int                                                  numberofboxes;
