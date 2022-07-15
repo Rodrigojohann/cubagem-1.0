@@ -26,11 +26,15 @@
 #include <pcl/features/vfh.h>
 #include <pcl/features/grsd.h>
 #include <boost/bind.hpp>
+#include <pcl/io/point_cloud_image_extractors.h>
+# include <pcl/io/png_io.h>
 
-typedef pcl::PointXYZ           PointT;
-typedef pcl::PointXYZI          PointI;
-typedef pcl::PointCloud<PointT> PointCloudT;
-typedef pcl::PointCloud<PointI> PointCloudI;
+typedef pcl::PointXYZ             PointT;
+typedef pcl::PointXYZI            PointI;
+typedef pcl::PointXYZRGB          PointRGB;
+typedef pcl::PointCloud<PointT>   PointCloudT;
+typedef pcl::PointCloud<PointI>   PointCloudI;
+typedef pcl::PointCloud<PointRGB> PointCloudRGB;
 
 class Processor
 {
@@ -48,6 +52,8 @@ class Processor
     double                          SurfaceArea(double hullarea, double dimensionX, double dimensionY);
     PointCloudT::Ptr                ProjectCloud(PointCloudT::Ptr inputcloud);
     bool                            CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud);
+    PointCloudRGB::Ptr              GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters);
+    pcl::PCLImage                   GenerateImage(PointCloudRGB::Ptr inputcloud);
 };
 
 #endif // PROCESSOR_H

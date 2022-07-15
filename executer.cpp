@@ -44,6 +44,9 @@ void Executer::Run(){
                 featuresvectorvector.push_back(featuresvector);
             }
 
+            coloredcloud = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
+            pcl::PCLImage clusterimage = processor.GenerateImage(coloredcloud);
+
             sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
 //                processor.SaveFeatures(sumfeaturesvector);
 
@@ -57,16 +60,7 @@ void Executer::Run(){
 
             numberofboxes_str = std::to_string(numberofboxes);
 
-            if (numberofboxes == NUMBEROFBOXES)
-            {
-//              ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/on");
-            }
-            else
-            {
-//              ConnectTDC((char*)"192.168.136.200:1880/sinaleiro/off");
-            }
-
-//          SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
+            connector.SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
 
             outputarray.push_back(numberofboxes_str);
 

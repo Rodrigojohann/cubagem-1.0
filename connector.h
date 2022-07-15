@@ -11,6 +11,7 @@ class Connector
   public:
     void          SendJSON(int count, double volume, bool connection, double ymin, double ymax, double xmin, double xmax, double height);
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
+    void          SendBase64Image();
 };
 
 #endif // CONNECTOR_H

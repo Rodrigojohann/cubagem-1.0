@@ -410,4 +410,51 @@ bool Processor::CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr temp
 //    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PointCloudRGB::Ptr Processor::GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters)
+{
+//var
+    PointCloudRGB::Ptr inputcolored (new PointCloudRGB);
+    PointCloudRGB::Ptr clusterscolored (new PointCloudRGB);
+    PointCloudRGB::Ptr outputcloud (new PointCloudRGB);
+////
+    inputcolored->points.resize(inputcloud->points.size());
+    clusterscolored->points.resize(clusters->points.size());
 
+    for (int i = 0; i < inputcloud->points.size(); ++i)
+    {
+        inputcolored->points[i].x = (*inputcloud)[i].x;
+        inputcolored->points[i].y = (*inputcloud)[i].y;
+        inputcolored->points[i].z = (*inputcloud)[i].z;
+        inputcolored->points[i].r = 0;
+        inputcolored->points[i].g = 0;
+        inputcolored->points[i].b = 0;
+    }
+
+    for (int i = 0; i < clusters->points.size(); ++i)
+    {
+        clusterscolored->points[i].x = (*clusters)[i].x;
+        clusterscolored->points[i].y = (*clusters)[i].y;
+        clusterscolored->points[i].z = (*clusters)[i].z;
+        clusterscolored->points[i].r = 0;
+        clusterscolored->points[i].g = 0;
+        clusterscolored->points[i].b = 255;
+    }
+
+    *outputcloud = *inputcolored + *clusterscolored;
+
+    return outputcloud;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+pcl::PCLImage Processor::GenerateImage(PointCloudRGB::Ptr inputcloud)
+{
+// var
+    pcl::PCLImage image;
+    pcl::io::PointCloudImageExtractorFromRGBField<PointRGB> pcie;
+////
+    pcie.setPaintNaNsWithBlack(true);
+    pcie.extract(*inputcloud, image);
+
+    pcl::io::savePNGFile ("filename.png", image);
+
+    return image;
+}
