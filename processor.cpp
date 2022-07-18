@@ -410,46 +410,42 @@ bool Processor::CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr temp
 //    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudRGB::Ptr Processor::GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters)
+PointCloudL::Ptr Processor::GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters)
 {
 //var
-    PointCloudRGB::Ptr inputcolored (new PointCloudRGB);
-    PointCloudRGB::Ptr clusterscolored (new PointCloudRGB);
-    PointCloudRGB::Ptr outputcloud (new PointCloudRGB);
+    PointCloudL::Ptr inputlabel (new PointCloudL);
+    PointCloudL::Ptr clusterlabel (new PointCloudL);
+    PointCloudL::Ptr outputcloud (new PointCloudL);
 ////
-    inputcolored->points.resize(inputcloud->points.size());
-    clusterscolored->points.resize(clusters->points.size());
+    inputlabel->points.resize(inputcloud->points.size());
+    clusterlabel->points.resize(clusters->points.size());
 
     for (int i = 0; i < inputcloud->points.size(); ++i)
     {
-        inputcolored->points[i].x = (*inputcloud)[i].x;
-        inputcolored->points[i].y = (*inputcloud)[i].y;
-        inputcolored->points[i].z = (*inputcloud)[i].z;
-        inputcolored->points[i].r = 0;
-        inputcolored->points[i].g = 0;
-        inputcolored->points[i].b = 0;
+        inputlabel->points[i].x = (*inputcloud)[i].x;
+        inputlabel->points[i].y = (*inputcloud)[i].y;
+        inputlabel->points[i].z = (*inputcloud)[i].z;
+        inputlabel->points[i].label = 0;
     }
 
     for (int i = 0; i < clusters->points.size(); ++i)
     {
-        clusterscolored->points[i].x = (*clusters)[i].x;
-        clusterscolored->points[i].y = (*clusters)[i].y;
-        clusterscolored->points[i].z = (*clusters)[i].z;
-        clusterscolored->points[i].r = 0;
-        clusterscolored->points[i].g = 0;
-        clusterscolored->points[i].b = 255;
+        clusterlabel->points[i].x = (*clusters)[i].x;
+        clusterlabel->points[i].y = (*clusters)[i].y;
+        clusterlabel->points[i].z = (*clusters)[i].z;
+        clusterlabel->points[i].label = 1;
     }
 
-    *outputcloud = *inputcolored + *clusterscolored;
+    *outputcloud = *inputlabel + *clusterlabel;
 
     return outputcloud;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-pcl::PCLImage Processor::GenerateImage(PointCloudRGB::Ptr inputcloud)
+pcl::PCLImage Processor::GenerateImage(PointCloudL::Ptr inputcloud)
 {
 // var
     pcl::PCLImage image;
-    pcl::io::PointCloudImageExtractorFromRGBField<PointRGB> pcie;
+    pcl::io::PointCloudImageExtractorFromLabelField<PointL> pcie;
 ////
     pcie.setPaintNaNsWithBlack(true);
     pcie.extract(*inputcloud, image);

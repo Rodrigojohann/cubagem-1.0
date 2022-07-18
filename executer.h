@@ -15,10 +15,10 @@
 
 typedef pcl::PointXYZ                          PointT;
 typedef pcl::PointXYZI                         PointI;
-typedef pcl::PointXYZRGB                       PointRGB;
+typedef pcl::PointXYZL                         PointL;
 typedef pcl::PointCloud<PointT>                PointCloudT;
 typedef pcl::PointCloud<PointI>                PointCloudI;
-typedef pcl::PointCloud<PointRGB>              PointCloudRGB;
+typedef pcl::PointCloud<PointL>                PointCloudL;
 typedef std::vector<PointXYZ>                  CloudVector;
 typedef dlib::matrix<double, 4, 1>             sample_type;
 typedef dlib::radial_basis_kernel<sample_type> kernel_type;
@@ -36,7 +36,7 @@ class Executer
     PointCloudI::Ptr                                     cloud_preprocessed;
     PointCloudI::Ptr                                     filteredcloud;
     PointCloudT::Ptr                                     concatclusters;
-    PointCloudRGB::Ptr                                   coloredcloud;
+    PointCloudL::Ptr                                     cloudlabel;
     std::vector<pcl::PointIndices>                       clusters_indices;
     std::vector<PointCloudT::Ptr>                        clusters;
     int                                                  numberofboxes;

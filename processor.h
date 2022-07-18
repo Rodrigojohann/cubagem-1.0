@@ -29,12 +29,12 @@
 #include <pcl/io/point_cloud_image_extractors.h>
 # include <pcl/io/png_io.h>
 
-typedef pcl::PointXYZ             PointT;
-typedef pcl::PointXYZI            PointI;
-typedef pcl::PointXYZRGB          PointRGB;
-typedef pcl::PointCloud<PointT>   PointCloudT;
-typedef pcl::PointCloud<PointI>   PointCloudI;
-typedef pcl::PointCloud<PointRGB> PointCloudRGB;
+typedef pcl::PointXYZ               PointT;
+typedef pcl::PointXYZI              PointI;
+typedef pcl::PointXYZL              PointL;
+typedef pcl::PointCloud<PointT>     PointCloudT;
+typedef pcl::PointCloud<PointI>     PointCloudI;
+typedef pcl::PointCloud<PointL>     PointCloudL;
 
 class Processor
 {
@@ -52,8 +52,8 @@ class Processor
     double                          SurfaceArea(double hullarea, double dimensionX, double dimensionY);
     PointCloudT::Ptr                ProjectCloud(PointCloudT::Ptr inputcloud);
     bool                            CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud);
-    PointCloudRGB::Ptr              GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters);
-    pcl::PCLImage                   GenerateImage(PointCloudRGB::Ptr inputcloud);
+    PointCloudL::Ptr                GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters);
+    pcl::PCLImage                   GenerateImage(PointCloudL::Ptr inputcloud);
 };
 
 #endif // PROCESSOR_H

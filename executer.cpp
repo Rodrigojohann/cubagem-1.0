@@ -10,8 +10,8 @@ void Executer::Run(){
     dlib::deserialize("./saved_function_face3.dat") >> df;
     dlib::deserialize("./normalizer_function_face3.dat") >> normalizer;
 ////
-    for (;;)
-    {
+//    for (;;)
+//    {
         connection = sensor.TestConnection(IP2, PORT);
 
         if (connection == false)
@@ -44,8 +44,8 @@ void Executer::Run(){
                 featuresvectorvector.push_back(featuresvector);
             }
 
-            coloredcloud = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
-            pcl::PCLImage clusterimage = processor.GenerateImage(coloredcloud);
+            cloudlabel = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
+            pcl::PCLImage clusterimage = processor.GenerateImage(cloudlabel);
 
             sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
 //                processor.SaveFeatures(sumfeaturesvector);
@@ -66,6 +66,6 @@ void Executer::Run(){
 
             outputstring = numberofboxes_str;
         }
-    }
+//    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
