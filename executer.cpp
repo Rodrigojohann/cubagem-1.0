@@ -45,26 +45,29 @@ void Executer::Run(){
             }
 
             cloudlabel = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
+
+            std::cout << "\n\nsize: " << cloud_preprocessed->points.size();
+
             pcl::PCLImage clusterimage = processor.GenerateImage(cloudlabel);
 
-            sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
-//                processor.SaveFeatures(sumfeaturesvector);
+//            sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
+////                processor.SaveFeatures(sumfeaturesvector);
 
-            for (int i=0; i < (sumfeaturesvector.size()); ++i)
-            {
-                featuresmatrix(i) = sumfeaturesvector[i];
-            }
+//            for (int i=0; i < (sumfeaturesvector.size()); ++i)
+//            {
+//                featuresmatrix(i) = sumfeaturesvector[i];
+//            }
 
-            numberofboxes = round(df(normalizer(featuresmatrix)));
-            volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
+//            numberofboxes = round(df(normalizer(featuresmatrix)));
+//            volumemean = df(normalizer(featuresmatrix))*STANDARDBOXVOLUME;
 
-            numberofboxes_str = std::to_string(numberofboxes);
+//            numberofboxes_str = std::to_string(numberofboxes);
 
-            connector.SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
+//            connector.SendJSON(numberofboxes, volumemean, connection, y_min, y_max, x_min, x_max, camheight);
 
-            outputarray.push_back(numberofboxes_str);
+//            outputarray.push_back(numberofboxes_str);
 
-            outputstring = numberofboxes_str;
+//            outputstring = numberofboxes_str;
         }
 //    }
 }

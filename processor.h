@@ -26,8 +26,10 @@
 #include <pcl/features/vfh.h>
 #include <pcl/features/grsd.h>
 #include <boost/bind.hpp>
-#include <pcl/io/point_cloud_image_extractors.h>
-# include <pcl/io/png_io.h>
+
+#include  <pcl/range_image/range_image.h>
+#include  <pcl/visualization/common/float_image_utils.h>//Save the depth image
+#include <pcl/io/png_io.h>
 
 typedef pcl::PointXYZ               PointT;
 typedef pcl::PointXYZI              PointI;

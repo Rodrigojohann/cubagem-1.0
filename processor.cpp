@@ -67,6 +67,7 @@ PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min,
     pcl::PassThrough<PointI>        pass_x;
     pcl::PassThrough<PointI>        pass_y;
     pcl::PassThrough<PointI>        pass_z;
+    PointCloudI::Ptr                unfilteredcloud    (new PointCloudI);
     PointCloudI::Ptr                cloud_passthrough  (new PointCloudI);
     PointCloudI::Ptr                outputcloud        (new PointCloudI);
     pcl::PointIndicesPtr            ground             (new pcl::PointIndices);
@@ -77,22 +78,24 @@ PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min,
 ////
     if (inputcloud->points.size() > 100)
     {
-        pass_x.setInputCloud(inputcloud);
+        *unfilteredcloud = *inputcloud;
+
+        pass_x.setInputCloud(unfilteredcloud);
         pass_x.setFilterFieldName("x");
         pass_x.setFilterLimits(-x_min, x_max);;
-        pass_x.filter(*inputcloud);
+        pass_x.filter(*unfilteredcloud);
 
-        pass_y.setInputCloud(inputcloud);
+        pass_y.setInputCloud(unfilteredcloud);
         pass_y.setFilterFieldName("y");
         pass_y.setFilterLimits(-y_min, y_max);
-        pass_y.filter(*inputcloud);
+        pass_y.filter(*unfilteredcloud);
 
-        pass_z.setInputCloud(inputcloud);
+        pass_z.setInputCloud(unfilteredcloud);
         pass_z.setFilterFieldName("z");
         pass_z.setFilterLimits(0.0, (camheight+0.08));
-        pass_z.filter(*inputcloud);
+        pass_z.filter(*unfilteredcloud);
 
-        pass_z.setInputCloud(inputcloud);
+        pass_z.setInputCloud(unfilteredcloud);
         pass_z.setFilterFieldName("z");
         pass_z.setFilterLimits((camheight - 0.08), (camheight + 0.08));
         pass_z.filter(*cloud_passthrough);
@@ -445,12 +448,29 @@ pcl::PCLImage Processor::GenerateImage(PointCloudL::Ptr inputcloud)
 {
 // var
     pcl::PCLImage image;
-    pcl::io::PointCloudImageExtractorFromLabelField<PointL> pcie;
 ////
-    pcie.setPaintNaNsWithBlack(true);
-    pcie.extract(*inputcloud, image);
+    float angularResolution = (float)(0.1f*(M_PI/180.0f));
+    float maxAngleWidth = (float)(360.0f*(M_PI/180.0f));
+    float maxAngleHeight = (float)(180.0f*(M_PI/180.0f));
 
-    pcl::io::savePNGFile ("filename.png", image);
+    Eigen::Affine3f sensorPose = (Eigen::Affine3f) Eigen::Translation3f(0.0f, 0.0f, -3.0f); //The position of the sensor defines the virtual sensor The 6 DOF position, its origin is roll=pitch=yaw=0.
+    pcl::RangeImage::CoordinateFrame coordinate_frame = pcl::RangeImage::CAMERA_FRAME; //x is facing right, y is down, z-axis is forward, another option is laser frame, x is facing forward, y is to left, z up.
+    float noiseLevel = 0.00;
+    float minRange = 0.0f;
+    int borderSize = 1;
+
+    pcl::RangeImage rangeImage;
+    rangeImage.createFromPointCloud(*inputcloud, angularResolution, maxAngleWidth, maxAngleHeight, sensorPose, coordinate_frame, noiseLevel, minRange, borderSize);
+
+    for (int i=0; i < rangeImage.points.size(); ++i)
+    {
+        rangeImage.points[i].range = rangeImage.points[i].range*0;
+    }
+
+    float *ranges = rangeImage.getRangesArray();
+    unsigned char *rgb_image = pcl::visualization::FloatImageUtils::getVisualImage(ranges, rangeImage.width, rangeImage.height, 0.0, 1.0, true);
+
+    pcl::io::saveRgbPNGFile("saveRangeImageRGB.png", rgb_image, rangeImage.width, rangeImage.height);
 
     return image;
 }
