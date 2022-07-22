@@ -9,6 +9,11 @@ void Executer::Run(){
 
     dlib::deserialize("./saved_function_face3.dat") >> df;
     dlib::deserialize("./normalizer_function_face3.dat") >> normalizer;
+    x_min = X_MIN;
+    x_max = X_MAX;
+    y_min = Y_MIN;
+    y_max = Y_MAX;
+    camheight = CAMHEIGHT;
 ////
 //    for (;;)
 //    {
@@ -44,11 +49,7 @@ void Executer::Run(){
                 featuresvectorvector.push_back(featuresvector);
             }
 
-            cloudlabel = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
-
-            std::cout << "\n\nsize: " << cloud_preprocessed->points.size();
-
-            pcl::PCLImage clusterimage = processor.GenerateImage(cloudlabel);
+            pcl::PCLImage clusterimage = processor.GenerateColoredCloud(cloud_preprocessed, concatclusters);
 
 //            sumfeaturesvector = regressor.ConcatFeatures(featuresvectorvector);
 ////                processor.SaveFeatures(sumfeaturesvector);

@@ -1,4 +1,4 @@
-#define  CAMHEIGHT 3.45
+#define  CAMHEIGHT 3.52
 #define  X_MIN 0.5
 #define  X_MAX 0.5
 #define  Y_MIN 0.1

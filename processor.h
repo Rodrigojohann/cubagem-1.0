@@ -16,6 +16,7 @@
 #include <pcl/surface/convex_hull.h>
 #include <config.h>
 #include <pcl/common/centroid.h>
+#include <pcl/common/common.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/segmentation/conditional_euclidean_clustering.h>
@@ -54,8 +55,7 @@ class Processor
     double                          SurfaceArea(double hullarea, double dimensionX, double dimensionY);
     PointCloudT::Ptr                ProjectCloud(PointCloudT::Ptr inputcloud);
     bool                            CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr templatecloud);
-    PointCloudL::Ptr                GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters);
-    pcl::PCLImage                   GenerateImage(PointCloudL::Ptr inputcloud);
+    pcl::PCLImage                   GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters);
 };
 
 #endif // PROCESSOR_H

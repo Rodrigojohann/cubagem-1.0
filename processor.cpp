@@ -120,10 +120,21 @@ PointCloudI::Ptr Processor::FilterROI(PointCloudI::Ptr inputcloud, double x_min,
             outputcloud->points[i].intensity = (*cloud_passthrough)[i].intensity;
         }
 
-        p.setInputCloud(inputcloud);
+        p.setInputCloud(unfilteredcloud);
         p.setTargetCloud(outputcloud);
         p.setDistanceThreshold(0.001);
         p.segment(*outputcloud);
+    }
+    else
+    {
+        outputcloud->points.resize(unfilteredcloud->points.size());
+        for (size_t i = 0; i < inputcloud->points.size(); ++i)
+        {
+            outputcloud->points[i].x = (*unfilteredcloud)[i].x;
+            outputcloud->points[i].y = (*unfilteredcloud)[i].y;
+            outputcloud->points[i].z = (*unfilteredcloud)[i].z;
+            outputcloud->points[i].intensity = (*unfilteredcloud)[i].intensity;
+        }
     }
 
     return outputcloud;
@@ -413,64 +424,127 @@ bool Processor::CheckPosition(PointCloudI::Ptr inputcloud, PointCloudI::Ptr temp
 //    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PointCloudL::Ptr Processor::GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters)
+pcl::PCLImage Processor::GenerateColoredCloud(PointCloudI::Ptr inputcloud, PointCloudT::Ptr clusters)
 {
 //var
-    PointCloudL::Ptr inputlabel (new PointCloudL);
-    PointCloudL::Ptr clusterlabel (new PointCloudL);
-    PointCloudL::Ptr outputcloud (new PointCloudL);
-////
-    inputlabel->points.resize(inputcloud->points.size());
-    clusterlabel->points.resize(clusters->points.size());
-
-    for (int i = 0; i < inputcloud->points.size(); ++i)
-    {
-        inputlabel->points[i].x = (*inputcloud)[i].x;
-        inputlabel->points[i].y = (*inputcloud)[i].y;
-        inputlabel->points[i].z = (*inputcloud)[i].z;
-        inputlabel->points[i].label = 0;
-    }
-
-    for (int i = 0; i < clusters->points.size(); ++i)
-    {
-        clusterlabel->points[i].x = (*clusters)[i].x;
-        clusterlabel->points[i].y = (*clusters)[i].y;
-        clusterlabel->points[i].z = (*clusters)[i].z;
-        clusterlabel->points[i].label = 1;
-    }
-
-    *outputcloud = *inputlabel + *clusterlabel;
-
-    return outputcloud;
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-pcl::PCLImage Processor::GenerateImage(PointCloudL::Ptr inputcloud)
-{
-// var
-    pcl::PCLImage image;
-////
-    float angularResolution = (float)(0.1f*(M_PI/180.0f));
-    float maxAngleWidth = (float)(360.0f*(M_PI/180.0f));
-    float maxAngleHeight = (float)(180.0f*(M_PI/180.0f));
-
-    Eigen::Affine3f sensorPose = (Eigen::Affine3f) Eigen::Translation3f(0.0f, 0.0f, -3.0f); //The position of the sensor defines the virtual sensor The 6 DOF position, its origin is roll=pitch=yaw=0.
+    PointCloudT::Ptr inputcloudxyz (new PointCloudT);
+    PointCloudT::Ptr clusterswithmaxmin (new PointCloudT);
+    pcl::PCLImage    image;
+    float            angularResolution = (float)(0.1f*(M_PI/180.0f));
+    float            maxAngleWidth = (float)(360.0f*(M_PI/180.0f));
+    float            maxAngleHeight = (float)(180.0f*(M_PI/180.0f));
+    Eigen::Affine3f  sensorPose = (Eigen::Affine3f) Eigen::Translation3f(0.0f, 0.0f, 0.0f); //The position of the sensor defines the virtual sensor The 6 DOF position, its origin is roll=pitch=yaw=0.
     pcl::RangeImage::CoordinateFrame coordinate_frame = pcl::RangeImage::CAMERA_FRAME; //x is facing right, y is down, z-axis is forward, another option is laser frame, x is facing forward, y is to left, z up.
     float noiseLevel = 0.00;
     float minRange = 0.0f;
     int borderSize = 1;
+    pcl::RangeImage::Ptr rangeImage_input (new pcl::RangeImage);
+    pcl::RangeImage::Ptr rangeImage_clusters (new pcl::RangeImage);
+    pcl::RangeImage::Ptr rangeImage (new pcl::RangeImage);
+    PointT minPtinput, maxPtinput;
+////
+    inputcloudxyz->points.resize(inputcloud->points.size());
 
-    pcl::RangeImage rangeImage;
-    rangeImage.createFromPointCloud(*inputcloud, angularResolution, maxAngleWidth, maxAngleHeight, sensorPose, coordinate_frame, noiseLevel, minRange, borderSize);
-
-    for (int i=0; i < rangeImage.points.size(); ++i)
+    for (int i = 0; i < inputcloudxyz->points.size(); ++i)
     {
-        rangeImage.points[i].range = rangeImage.points[i].range*0;
+        inputcloudxyz->points[i].x = (*inputcloud)[i].x;
+        inputcloudxyz->points[i].y = (*inputcloud)[i].y;
+        inputcloudxyz->points[i].z = (*inputcloud)[i].z;
     }
 
-    float *ranges = rangeImage.getRangesArray();
-    unsigned char *rgb_image = pcl::visualization::FloatImageUtils::getVisualImage(ranges, rangeImage.width, rangeImage.height, 0.0, 1.0, true);
+    pcl::getMinMax3D(*inputcloudxyz, minPtinput, maxPtinput);
 
-    pcl::io::saveRgbPNGFile("saveRangeImageRGB.png", rgb_image, rangeImage.width, rangeImage.height);
+    inputcloudxyz->points.resize((inputcloud->points.size() + 8));
+
+    inputcloudxyz->points[inputcloud->points.size()].x = minPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()].y = minPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()].z = minPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+1].x = minPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+1].y = minPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+1].z = maxPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+2].x = minPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+2].y = maxPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+2].z = minPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+3].x = minPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+3].y = maxPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+3].z = maxPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+4].x = maxPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+4].y = minPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+4].z = minPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+5].x = maxPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+5].y = minPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+5].z = maxPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+6].x = maxPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+6].y = maxPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+6].z = minPtinput.z;
+
+    inputcloudxyz->points[inputcloud->points.size()+7].x = maxPtinput.x;
+    inputcloudxyz->points[inputcloud->points.size()+7].y = maxPtinput.y;
+    inputcloudxyz->points[inputcloud->points.size()+7].z = maxPtinput.z;
+
+    clusterswithmaxmin->points.resize((clusters->points.size() + 8));
+
+    for (int i = 0; i < clusters->points.size(); ++i)
+    {
+        clusterswithmaxmin->points[i].x = (*clusters)[i].x;
+        clusterswithmaxmin->points[i].y = (*clusters)[i].y;
+        clusterswithmaxmin->points[i].z = (*clusters)[i].z;
+    }
+
+    clusterswithmaxmin->points[clusters->points.size()].x = minPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()].y = minPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()].z = minPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+1].x = minPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+1].y = minPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+1].z = maxPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+2].x = minPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+2].y = maxPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+2].z = minPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+3].x = minPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+3].y = maxPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+3].z = maxPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+4].x = maxPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+4].y = minPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+4].z = minPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+5].x = maxPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+5].y = minPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+5].z = maxPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+6].x = maxPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+6].y = maxPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+6].z = minPtinput.z;
+
+    clusterswithmaxmin->points[clusters->points.size()+7].x = maxPtinput.x;
+    clusterswithmaxmin->points[clusters->points.size()+7].y = maxPtinput.y;
+    clusterswithmaxmin->points[clusters->points.size()+7].z = maxPtinput.z;
+
+
+    rangeImage_input->createFromPointCloud(*inputcloudxyz, angularResolution, maxAngleWidth, maxAngleHeight, sensorPose, coordinate_frame, noiseLevel, minRange, borderSize);
+
+    float *ranges_input = rangeImage_input->getRangesArray();
+    unsigned char *rgb_image_input = pcl::visualization::FloatImageUtils::getVisualImage(ranges_input, rangeImage_input->width, rangeImage_input->height, 0.0, 1.0, true);
+
+    pcl::io::saveRgbPNGFile("saveRangeImageRGB_input.png", rgb_image_input, rangeImage_input->width, rangeImage_input->height);
+
+
+    rangeImage_clusters->createFromPointCloud(*clusterswithmaxmin, angularResolution, maxAngleWidth, maxAngleHeight, sensorPose, coordinate_frame, noiseLevel, minRange, borderSize);
+
+    float *ranges_clusters = rangeImage_clusters->getRangesArray();
+    unsigned char *rgb_image_clusters = pcl::visualization::FloatImageUtils::getVisualImage(ranges_clusters, rangeImage_clusters->width, rangeImage_clusters->height, 0.0, 1.0, true);
+
+    pcl::io::saveRgbPNGFile("saveRangeImageRGB_clusters.png", rgb_image_clusters, rangeImage_clusters->width, rangeImage_clusters->height);
 
     return image;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
